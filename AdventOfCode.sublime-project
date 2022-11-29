@@ -1,0 +1,73 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns":
+			[
+				"build",
+				"lib",
+				"release",
+				".vs",
+				"Debug",
+				"engine/template",
+				"data/Resources/Raw",
+			],
+			"file_exclude_patterns":
+			[
+				"*.sln",
+				"*.rdbg",
+				"*.cap",
+				"*.opendb",
+				"data/screenshot_*.png",
+				"data/Resources/.git",
+			],
+		},
+		{
+			"name": "GyLib",
+			"path": "lib/include/gylib",
+		},
+		{
+			"path": "build",
+			"folder_exclude_patterns":
+			[
+				".vs",
+			],
+			"file_exclude_patterns":
+			[
+				"*.exp",
+				"*.map",
+				"*.obj",
+				"RDa05096",
+				"*.res",
+				"*.js",
+				"*.wasm",
+				"*.wat",
+				"*.html",
+				"preprocessed_output.txt",
+			],
+		},
+	],
+	"settings":
+	{
+		"build_options":
+		[
+		],
+		"custom_constants":
+		[
+			"BEFORE_RESOURCES_LOAD_PERCENT",
+			"CONVEX_POLYGON2D_SHADER_SUPPORT",
+			"GAME_LOAD_PERCENT",
+			"RESOURCES_LOAD_PERCENT",
+		],
+		"custom_functions":
+		[
+		],
+		"custom_globals":
+		[
+		],
+		"custom_types":
+		[
+		],
+	},
+}
