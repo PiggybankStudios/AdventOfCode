@@ -14,15 +14,14 @@ Date:   08\13\2022
 #define MMENU_BTN_SIZE                  NewVec2(380, 60)
 #define MMENU_BTN_SND_DEDUPLICATE_TIME  100 //ms
 
-#define MMENU_FADE_IN_ANIM_TIME     3000 //ms
+#define MMENU_FADE_IN_ANIM_TIME     1000 //ms
 #define MMENU_MUSIC_FADE_TIME       1000 //ms
-#define MMENU_LOGO_ANIM_TIME        1000 //ms
+#define MMENU_LOGO_ANIM_TIME        400 //ms
 #define MMENU_LOGO_CLICK_ANIM_TIME  1000 //ms
 
 enum MainMenuBtn_t
 {
-	MainMenuBtn_Play = 0,
-	MainMenuBtn_Settings,
+	MainMenuBtn_AdventOfCode = 0,
 	MainMenuBtn_Exit,
 	MainMenuBtn_NumButtons,
 };
@@ -30,9 +29,8 @@ const char* GetMainMenuBtnStr(MainMenuBtn_t mainMenuBtn)
 {
 	switch (mainMenuBtn)
 	{
-		case MainMenuBtn_Play:     return "Play";
-		case MainMenuBtn_Settings: return "Settings";
-		case MainMenuBtn_Exit:     return "Exit";
+		case MainMenuBtn_AdventOfCode: return "AdventOfCode";
+		case MainMenuBtn_Exit:         return "Exit";
 		default: return "Unknown";
 	}
 }
@@ -40,9 +38,8 @@ const char* GetMainMenuBtnDisplayStr(MainMenuBtn_t mainMenuBtn)
 {
 	switch (mainMenuBtn)
 	{
-		case MainMenuBtn_Play:     return "Play";
-		case MainMenuBtn_Settings: return "Settings";
-		case MainMenuBtn_Exit:     return "Exit";
+		case MainMenuBtn_AdventOfCode: return "AoC Solutions";
+		case MainMenuBtn_Exit:         return "Exit";
 		default: return "Unknown";
 	}
 }
@@ -65,6 +62,8 @@ struct MainMenuAppState_t
 	
 	r32 backgroundScale;
 	rec backgroundRec;
+	r32 treeScale;
+	rec treeRec;
 };
 
 #endif //  _MAIN_MENU_STATE_H

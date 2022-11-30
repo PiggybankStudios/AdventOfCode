@@ -16,6 +16,7 @@ Description:
 
 #include "app_state_list.h"
 #include "main_menu/main_menu_state.h"
+#include "aoc/aoc_state.h"
 
 // +--------------------------------------------------------------+
 // |                           Globals                            |
@@ -24,6 +25,8 @@ struct AppStateStructs_t
 {
 	u64 mainMenuAppStateSize;
 	MainMenuAppState_t* mainMenuAppStatePntr;
+	u64 aocAppStateSize;
+	AdventOfCodeState_t* aocAppStatePntr;
 };
 
 struct AppGlobals_t
@@ -31,8 +34,9 @@ struct AppGlobals_t
 	bool placeholder; //TODO: Remove me!
 };
 
-static AppGlobals_t*          gl        = nullptr;
-static MainMenuAppState_t*    mmenu     = nullptr;
+static AppGlobals_t*        gl      = nullptr;
+static MainMenuAppState_t*  mmenu   = nullptr;
+static AdventOfCodeState_t* aoc     = nullptr;
 
 DebugCommandInfoList_t GameGetDebugCommandInfoList();
 bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* arguments, MyStr_t fullInputStr);

@@ -12,6 +12,7 @@ enum AppState_t
 {
 	AppState_None = 0,
 	AppState_MainMenu,
+	AppState_AdventOfCode,
 	AppState_NumStates,
 };
 
@@ -19,8 +20,9 @@ const char* GetAppStateStr(AppState_t appState)
 {
 	switch (appState)
 	{
-		case AppState_None:        return "None";
-		case AppState_MainMenu:    return "MainMenu";
+		case AppState_None:         return "None";
+		case AppState_MainMenu:     return "MainMenu";
+		case AppState_AdventOfCode: return "AdventOfCode";
 		default: return "Unknown";
 	}
 }

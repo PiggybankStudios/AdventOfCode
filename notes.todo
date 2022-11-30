@@ -1,0 +1,9 @@
+[ ] Highlight the button for the previously run solution
+[ ] Add a debug command to redo the last solution that was run. Make a binding for it?
+[ ] Add a debug command to run a specific solution
+[ ] Add a way to easily read in and parse lines of data from files
+[ ] Make the buttons shift down when debug console is open
+[ ] Make the button list scrollable
+
+[X] Free the aocArena contents
+[X] Add string return from solutions that displays on screen

@@ -11,6 +11,7 @@ Description:
 // +--------------------------------------------------------------+
 void MainMenuAppStateAccessResources()
 {
+	AccessResource(&pig->resources.textures->aocTree);
 	AccessResource(&pig->resources.textures->madeInPigEngine);
 	AccessResource(&pig->resources.sounds->oink);
 	AccessResource(&pig->resources.sounds->click1);
@@ -64,15 +65,6 @@ void StopMainMenuAppState(AppState_t newAppState, bool deinitialize, bool shutti
 // +--------------------------------------------------------------+
 void LayoutMainMenuAppState()
 {
-	#if 0
-	mmenu->backgroundRec.size = pig->resources.textures->mainMenuBackground.size;
-	mmenu->backgroundScale = MaxR32(ScreenSize.width / mmenu->backgroundRec.width, ScreenSize.height / mmenu->backgroundRec.height);
-	mmenu->backgroundRec.size = mmenu->backgroundRec.size * mmenu->backgroundScale;
-	mmenu->backgroundRec.x = ScreenSize.width/2 - mmenu->backgroundRec.width/2;
-	mmenu->backgroundRec.y = ScreenSize.height/2 - mmenu->backgroundRec.height/2;
-	RecAlign(&mmenu->backgroundRec);
-	#endif
-	
 	mmenu->btnsStackRec.size = Vec2_Zero;
 	for (u64 bIndex = 0; bIndex < MainMenuBtn_NumButtons; bIndex++)
 	{
@@ -99,6 +91,12 @@ void LayoutMainMenuAppState()
 		RecAlign(btnRec);
 		if (btnRec->height > 0) { btnPos.y += btnRec->height + MMENU_BTN_PADDING; }
 	}
+	
+	mmenu->treeScale = 1.0f;
+	mmenu->treeRec.size = pig->resources.textures->aocTree.size * mmenu->treeScale;
+	mmenu->treeRec.x = ScreenSize.width/2 - mmenu->treeRec.width/2;
+	mmenu->treeRec.y = mmenu->btnsStackRec.y/2 - mmenu->treeRec.height/2;
+	RecAlign(&mmenu->treeRec);
 	
 	r32 pigLogoScale = 1.0f;
 	mmenu->pigLogoRec.size = pig->resources.textures->madeInPigEngine.size * pigLogoScale;
@@ -174,17 +172,10 @@ void UpdateMainMenuAppState()
 			// +==============================+
 			// |   Handle Play Btn Clicked    |
 			// +==============================+
-			// case MainMenuBtn_Play:
-			// {
-			// 	PushAppState(AppState_LevelSelect); //TODO: Make this go to some AppState!
-			// } break;
-			// +==============================+
-			// | Handle Settings Btn Clicked  |
-			// +==============================+
-			// case MainMenuBtn_Settings:
-			// {
-			// 	PushAppState(AppState_SettingsMenu);
-			// } break;
+			case MainMenuBtn_AdventOfCode:
+			{
+				PushAppState(AppState_AdventOfCode);
+			} break;
 			// +==============================+
 			// |   Handle Exit Btn Clicked    |
 			// +==============================+
@@ -248,7 +239,7 @@ void RenderMainMenuAppState(FrameBuffer_t* renderBuffer, bool bottomLayer)
 	MainMenuAppStateAccessResources();
 	LayoutMainMenuAppState();
 	
-	RcBegin(pig->currentWindow, renderBuffer, &pig->resources.shaders->main2D, Black);
+	RcBegin(pig->currentWindow, renderBuffer, &pig->resources.shaders->main2D, NewColor(0xFF0E1024));
 	// RcClearColor(Grey3); //TODO: Remove me!
 	// return; //TODO: Remove me!
 	
@@ -260,6 +251,13 @@ void RenderMainMenuAppState(FrameBuffer_t* renderBuffer, bool bottomLayer)
 	r32 mainMenuBrightness = EaseQuadraticInOut(SubAnimAmountR32(mmenu->fadeInAnimProgress, 0.0f, 1.0f));
 	RcDrawTexturedRectangle(mmenu->backgroundRec, ColorLerp(Black, Grey11, mainMenuBrightness));
 	#endif
+	
+	// +==============================+
+	// |         Render Tree          |
+	// +==============================+
+	RcBindTexture1(&pig->resources.textures->aocTree);
+	r32 treeAlpha = EaseQuadraticInOut(SubAnimAmountR32(mmenu->fadeInAnimProgress, 0.0f, 1.0f));
+	RcDrawTexturedRectangle(mmenu->treeRec, ColorTransparent(White, treeAlpha));
 	
 	// +==============================+
 	// |    Render Pig Engine Logo    |
@@ -310,61 +308,62 @@ void RenderMainMenuAppState(FrameBuffer_t* renderBuffer, bool bottomLayer)
 		RcBindFont(&pig->resources.fonts->debug, SelectDefaultFontFace());
 		v2 textPos = NewVec2(10, ScreenSize.height - 10 - RcGetMaxDescend());
 		Vec2Align(&textPos);
+		Color_t textColor = ColorTransparent(MonokaiWhite, SubAnimAmountR32(mmenu->fadeInAnimProgress, 0.5f, 1.0f));
 		
 		if (pig->debugOverlay.enabled || DEVELOPER_BUILD)
 		{
 			if (GYLIB_ASSERTIONS_ENABLED)
 			{
-				RcDrawTextPrint(textPos, MonokaiWhite, "Assertions \b\fenabled\f\b %s \b\f%s\f\b", pig->dontExitOnAssert ? "but" : "and", pig->dontExitOnAssert ? "won't exit" : "will exit");
+				RcDrawTextPrint(textPos, textColor, "Assertions \b\fenabled\f\b %s \b\f%s\f\b", pig->dontExitOnAssert ? "but" : "and", pig->dontExitOnAssert ? "won't exit" : "will exit");
 				textPos.y -= RcGetLineHeight();
 			}
 			else
 			{
-				RcDrawText("Assertions \b\fdisabled\f\b", textPos, MonokaiWhite);
+				RcDrawText("Assertions \b\fdisabled\f\b", textPos, textColor);
 				textPos.y -= RcGetLineHeight();
 			}
 		}
 		if (DEVELOPER_BUILD)
 		{
-			RcDrawText("DEVELOPER_BUILD", textPos, MonokaiWhite);
+			RcDrawText("DEVELOPER_BUILD", textPos, textColor);
 			textPos.y -= RcGetLineHeight();
 		}
 		if (DEBUG_BUILD)
 		{
-			RcDrawText("DEBUG_BUILD", textPos, MonokaiWhite);
+			RcDrawText("DEBUG_BUILD", textPos, textColor);
 			textPos.y -= RcGetLineHeight();
 		}
 		if (DEMO_BUILD)
 		{
-			RcDrawText("DEMO_BUILD", textPos, MonokaiWhite);
+			RcDrawText("DEMO_BUILD", textPos, textColor);
 			textPos.y -= RcGetLineHeight();
 		}
 		#if STEAM_BUILD
 		{
 			if (pig->debugOverlay.enabled || DEVELOPER_BUILD)
 			{
-				RcDrawTextPrint(textPos, MonokaiWhite, "STEAM_BUILD (%llu)", platInfo->steamAppId);
+				RcDrawTextPrint(textPos, textColor, "STEAM_BUILD (%llu)", platInfo->steamAppId);
 			}
 			else
 			{
-				RcDrawText("STEAM_BUILD", textPos, MonokaiWhite);
+				RcDrawText("STEAM_BUILD", textPos, textColor);
 			}
 			textPos.y -= RcGetLineHeight();
 		}
 		#endif
 		
-		RcDrawTextPrint(textPos, MonokaiWhite, "Platform v%u.%02u(%03u)", platInfo->version.major, platInfo->version.minor, platInfo->version.build);
+		RcDrawTextPrint(textPos, textColor, "Platform v%u.%02u(%03u)", platInfo->version.major, platInfo->version.minor, platInfo->version.build);
 		textPos.y -= RcGetLineHeight();
-		RcDrawTextPrint(textPos, MonokaiWhite, "Engine   v%llu.%02llu(%03llu)", (u64)ENGINE_VERSION_MAJOR, (u64)ENGINE_VERSION_MINOR, (u64)ENGINE_VERSION_BUILD);
+		RcDrawTextPrint(textPos, textColor, "Engine   v%llu.%02llu(%03llu)", (u64)ENGINE_VERSION_MAJOR, (u64)ENGINE_VERSION_MINOR, (u64)ENGINE_VERSION_BUILD);
 		textPos.y -= RcGetLineHeight();
 		if (pig->reloadIndex > 1)
 		{
-			RcDrawTextPrint(textPos, MonokaiWhite, "Game     v%llu.%02llu(%03llu) (reload %llu)", (u64)GAME_VERSION_MAJOR, (u64)GAME_VERSION_MINOR, (u64)GAME_VERSION_BUILD, pig->reloadIndex);
+			RcDrawTextPrint(textPos, textColor, "Game     v%llu.%02llu(%03llu) (reload %llu)", (u64)GAME_VERSION_MAJOR, (u64)GAME_VERSION_MINOR, (u64)GAME_VERSION_BUILD, pig->reloadIndex);
 			textPos.y -= RcGetLineHeight();
 		}
 		else
 		{
-			RcDrawTextPrint(textPos, MonokaiWhite, "Game     v%llu.%02llu(%03llu)", (u64)GAME_VERSION_MAJOR, (u64)GAME_VERSION_MINOR, (u64)GAME_VERSION_BUILD);
+			RcDrawTextPrint(textPos, textColor, "Game     v%llu.%02llu(%03llu)", (u64)GAME_VERSION_MAJOR, (u64)GAME_VERSION_MINOR, (u64)GAME_VERSION_BUILD);
 			textPos.y -= RcGetLineHeight();
 		}
 	}

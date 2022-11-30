@@ -9,7 +9,7 @@ Description:
 #ifndef _GAME_RESOURCES_H
 #define _GAME_RESOURCES_H
 
-#define RESOURCES_NUM_TEXTURES    13
+#define RESOURCES_NUM_TEXTURES    14
 #define RESOURCES_NUM_VECTORS     1
 #define RESOURCES_NUM_SHEETS      3
 #define RESOURCES_NUM_SHADERS     11
@@ -53,6 +53,8 @@ union ATTR_PACKED ResourceTextures_t
 		Texture_t defaultRed;
 		Texture_t defaultYellow;
 		Texture_t blueGradientBack;
+		
+		Texture_t aocTree;
 	};
 };
 union ATTR_PACKED ResourceVectors_t
@@ -149,6 +151,8 @@ const char* Resources_GetPathForTexture(u64 textureIndex, ResourceTextureMetaInf
 		case 10: NORMAL_TEXTURE_META_INFO(true,  true,  TEXTURES, "invalid_red.png");           //| defaultRed       |
 		case 11: NORMAL_TEXTURE_META_INFO(true,  true,  TEXTURES, "invalid_yellow.png");        //| defaultYellow    |
 		case 12: NORMAL_TEXTURE_META_INFO(true,  true,  TEXTURES, "blue_gradient.png");         //| blueGradientBack |
+		
+		case 13: NORMAL_TEXTURE_META_INFO(false, false, SPRITES,  "aoc_tree.png");              //| aocTree          |
 		
 		default: DebugAssert(false); return nullptr;
 	}

@@ -11,6 +11,6 @@ Date:   07\07\2022
 #define GAME_VERSION_MINOR 1
 
 //NOTE: Auto-incremented by a python script before each build
-#define GAME_VERSION_BUILD 11
+#define GAME_VERSION_BUILD 109
 
 #endif //  _GAME_VERSION_H
