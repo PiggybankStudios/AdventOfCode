@@ -42,9 +42,10 @@ MyStr_t AocSolutionFunc_2022_01(AocSolutionStruct_2022_01_t* data, bool doSoluti
 	
 	if (doSolutionB)
 	{
-		i64 foundIndices[3] = {-1, -1, -1};
+		const u64 numElvesToFind = 3;
+		i64 foundIndices[numElvesToFind] = {-1, -1, -1};
 		u64 maxCountsTotal = 0;
-		for (u8 pass = 0; pass < ArrayCount(foundIndices); pass++)
+		for (u8 pass = 0; pass < numElvesToFind; pass++)
 		{
 			u64 maxCount = 0;
 			u64 maxCountIndex = 0;
@@ -52,7 +53,7 @@ MyStr_t AocSolutionFunc_2022_01(AocSolutionStruct_2022_01_t* data, bool doSoluti
 			{
 				VarArrayLoopGet(u64, countPntr, &counts, eIndex);
 				bool isElfAlreadyFound = false;
-				for (u8 fIndex = 0; fIndex < ArrayCount(foundIndices); fIndex++)
+				for (u8 fIndex = 0; fIndex < numElvesToFind; fIndex++)
 				{
 					if (foundIndices[fIndex] >= 0 && (u64)foundIndices[fIndex] == eIndex) { isElfAlreadyFound = true; break; }
 				}

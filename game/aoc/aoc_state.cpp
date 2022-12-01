@@ -9,6 +9,7 @@ Description:
 MemArena_t* aocArena = nullptr;
 
 #include "aoc/aoc_helpers.cpp"
+#include "aoc/aoc2021.cpp"
 #include "aoc/aoc2022.cpp"
 #include "aoc/aoc_enum.cpp"
 
