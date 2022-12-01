@@ -11,6 +11,8 @@ Date:   11\29\2022
 
 #define AOC_ANSWER_CLICKED_STR_DISPLAY_TIME 1000 //ms
 
+#define AOC_BUTTONS_SCROLL_SPEED 20
+
 #define AOC_BTNS_MARGIN                 50 //px
 #define AOC_BTNS_PADDING                10 //px
 #define AOC_BTN_INNER_PADDING_LEFTRIGHT 15 //px
@@ -37,12 +39,14 @@ struct AdventOfCodeState_t
 	MemArena_t aocArena;
 	AocSolution_t prevSolution;
 	MyStr_t previousSolutionAnswer;
+	r32 clickedAnswerAnim;
 	
+	rec buttonsRec;
+	r32 buttonsScroll;
+	r32 buttonsScrollMax;
 	VarArray_t buttons; //AocSolutionBtn_t
 	TextMeasure_t prevSolutionAnswerMeasure;
 	rec prevSolutionAnswerRec;
-
-	r32 clickedAnswerAnim; //TODO: move me up
 };
 
 #endif //  _AOC_STATE_H

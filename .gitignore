@@ -11,7 +11,6 @@
 # TODO: Re-enable me in a proper game project since resources take up a lot more repository space to track
 # /data/Resources/
 /data/Resources/Raw/
-/data/screenshot*.png
 
 /release/
 
@@ -22,7 +21,8 @@
 *.obj
 *.o
 /data/*.exe
-/data/PigEngine*
+/data/*.dll
+/data/screenshot*.png
 
 #Visual Studio Stuff
 *.VC.*

@@ -10,6 +10,40 @@ Description:
 
 #define MULTIPLIER 998
 
+void AocAppState_RunAocSolution(AocSolution_t solution)
+{
+	aocArena = &aoc->aocArena;
+	u64 solutionStructSize = GetAocSolutionStructSize(solution);
+	void* solutionStructPntr = AllocMem(mainHeap, solutionStructSize);
+	
+	PrintLine_Nx(DbgFlag_Inverted, "Running Solution_%s...", GetAocSolutionStr(solution));
+	TempPushMark();
+	PerfTime_t solutionStartTime = plat->GetPerfTime();
+	
+	MyStr_t solutionAnswer = AocSolutionFunc(solution, solutionStructSize, solutionStructPntr);
+	
+	PerfTime_t solutionEndTime = plat->GetPerfTime();
+	r64 solutionTimeElapsed = plat->GetPerfTimeDiff(&solutionStartTime, &solutionEndTime);
+	PrintLine_Nx(DbgFlag_Inverted, "Solution finished in %s", FormatMillisecondsNt((u64)RoundR64i(solutionTimeElapsed), TempArena));
+	
+	aoc->prevSolution = solution;
+	FreeString(mainHeap, &aoc->previousSolutionAnswer);
+	
+	if (!IsEmptyStr(solutionAnswer))
+	{
+		// NotifyPrint_I("Solution to %s: %.*s", GetAocSolutionDisplayStr(solution), solutionAnswer.length, solutionAnswer.pntr);
+		plat->CopyTextToClipboard(solutionAnswer);
+		aoc->previousSolutionAnswer = AllocString(mainHeap, &solutionAnswer);
+	}
+	else
+	{
+		NotifyPrint_W("No solution to %s", GetAocSolutionDisplayStr(solution));
+	}
+	
+	ClearMemArena(&aoc->aocArena);
+	TempPopMark();
+}
+
 // +--------------------------------------------------------------+
 // |                       Access Resources                       |
 // +--------------------------------------------------------------+
@@ -32,6 +66,8 @@ void StartAocAppState(AppState_t oldAppState, bool initialize)
 		InitMemArena_PagedHeapFuncs(&aoc->aocArena, AOC_ARENA_PAGE_SIZE, PlatAllocFunc, PlatFreeFunc);
 		FlagSet(aoc->aocArena.flags, MemArenaFlag_AutoFreePages);
 		
+		aoc->prevSolution = AocSolution_NumSolutions;
+		
 		CreateVarArray(&aoc->buttons, mainHeap, sizeof(AocSolutionBtn_t), AocSolution_NumSolutions);
 		AocSolution_t prevSolution = AocSolution_First;
 		for (u64 sIndex = 0; sIndex < AocSolution_NumSolutions; sIndex++)
@@ -42,7 +78,7 @@ void StartAocAppState(AppState_t oldAppState, bool initialize)
 				AocSolutionBtn_t* newSeparator = VarArrayAdd(&aoc->buttons, AocSolutionBtn_t);
 				NotNull(newSeparator);
 				ClearPointer(newSeparator);
-				newSeparator->displayStr = PrintInArenaStr(mainHeap, "%llu", GetAocSolutionYear(solution));
+				newSeparator->displayStr = PrintInArenaStr(mainHeap, "\b%llu\b", GetAocSolutionYear(solution));
 				newSeparator->isSeparator = true;
 			}
 			
@@ -92,6 +128,16 @@ void StopAocAppState(AppState_t newAppState, bool deinitialize, bool shuttingDow
 // +--------------------------------------------------------------+
 void LayoutAocAppState()
 {
+	aoc->buttonsRec.width = ScreenSize.width - (2*AOC_BTNS_MARGIN);
+	aoc->buttonsRec.height = ScreenSize.height - (AOC_BTNS_MARGIN);
+	aoc->buttonsRec.topLeft = Vec2Fill(AOC_BTNS_MARGIN);
+	if (aoc->buttonsRec.y < pig->debugConsole.mainRec.y + pig->debugConsole.mainRec.height)
+	{
+		r32 change = (pig->debugConsole.mainRec.y + pig->debugConsole.mainRec.height) - aoc->buttonsRec.y;
+		aoc->buttonsRec.y += change;
+		aoc->buttonsRec.height -= change;
+	}
+	
 	v2 maxTextSize = Vec2_Zero;
 	VarArrayLoop(&aoc->buttons, bIndex)
 	{
@@ -114,8 +160,11 @@ void LayoutAocAppState()
 	}
 	
 	v2 btnSize = maxTextSize + NewVec2(2*AOC_BTN_INNER_PADDING_LEFTRIGHT, 2*AOC_BTN_INNER_PADDING_UP_DOWN);
-	u64 numBtnsPerRow = (u64)FloorR32i((ScreenSize.width - AOC_BTNS_MARGIN*2 + AOC_BTNS_PADDING) / (btnSize.width + AOC_BTNS_PADDING));
+	u64 numBtnsPerRow = (u64)FloorR32i((aoc->buttonsRec.width + AOC_BTNS_PADDING) / (btnSize.width + AOC_BTNS_PADDING));
+	r32 gridTotalWidth = ((r32)numBtnsPerRow * (btnSize.width + AOC_BTNS_PADDING)) - AOC_BTNS_PADDING;
+	r32 buttonsOffsetX = (aoc->buttonsRec.width - gridTotalWidth) / 2;
 	v2i gridPos = Vec2i_Zero;
+	aoc->buttonsScrollMax = 0;
 	VarArrayLoop(&aoc->buttons, bIndex)
 	{
 		VarArrayLoopGet(AocSolutionBtn_t, btn, &aoc->buttons, bIndex);
@@ -136,26 +185,40 @@ void LayoutAocAppState()
 			if ((u64)gridPos.x >= numBtnsPerRow) { gridPos.y++; gridPos.x = 0; }
 		}
 		btn->mainRec.size = btnSize;
-		btn->mainRec.topLeft = Vec2Fill(AOC_BTNS_MARGIN) + Vec2Multiply(ToVec2(btn->gridPos), btnSize + Vec2Fill(AOC_BTNS_PADDING));
+		btn->mainRec.topLeft = Vec2Multiply(ToVec2(btn->gridPos), btnSize + Vec2Fill(AOC_BTNS_PADDING));
+		btn->mainRec.x += buttonsOffsetX;
 		RecAlign(&btn->mainRec);
 		btn->textRec.size = btn->textMeasure.size;
 		RecLayoutHorizontalCenter(&btn->textRec, btn->mainRec.width/2);
 		RecLayoutVerticalCenter(&btn->textRec, btn->mainRec.height/2);
 		RecAlign(&btn->textRec);
+		if (aoc->buttonsScrollMax < btn->mainRec.y + btn->mainRec.height)
+		{
+			aoc->buttonsScrollMax = btn->mainRec.y + btn->mainRec.height;
+		}
 	}
+	
+	aoc->buttonsScrollMax = MaxR32(0, aoc->buttonsScrollMax - btnSize.height);
+	aoc->buttonsScroll = ClampR32(aoc->buttonsScroll, 0, aoc->buttonsScrollMax);
 }
 
 void CaptureMouseAocAppState()
 {
 	MouseHitRecNamed(aoc->prevSolutionAnswerRec, "PreviousSolutionAnswer");
-	VarArrayLoop(&aoc->buttons, bIndex)
+	if (IsMouseInsideRec(aoc->buttonsRec))
 	{
-		VarArrayLoopGet(AocSolutionBtn_t, btn, &aoc->buttons, bIndex);
-		if (!btn->isSeparator)
+		v2 buttonsBasePos = aoc->buttonsRec.topLeft - NewVec2(0, aoc->buttonsScroll);
+		VarArrayLoop(&aoc->buttons, bIndex)
 		{
-			MouseHitRecPrint(btn->mainRec, "AocSolutionBtn_%s", GetAocSolutionStr(btn->solution));
+			VarArrayLoopGet(AocSolutionBtn_t, btn, &aoc->buttons, bIndex);
+			rec mainRec = btn->mainRec + buttonsBasePos;
+			if (!btn->isSeparator)
+			{
+				MouseHitRecPrint(mainRec, "SolutionListBtn_%s", GetAocSolutionStr(btn->solution));
+			}
 		}
 	}
+	MouseHitRecNamed(aoc->buttonsRec, "SolutionList");
 }
 
 // +--------------------------------------------------------------+
@@ -175,6 +238,15 @@ void UpdateAocAppState()
 	}
 	
 	// +==============================+
+	// |       Handle Scrolling       |
+	// +==============================+
+	if (MouseScrolledY() && IsMouseOverNamedPartial("SolutionList"))
+	{
+		HandleMouseScrollY();
+		aoc->buttonsScroll -= pigIn->scrollDelta.y * AOC_BUTTONS_SCROLL_SPEED;
+	}
+	
+	// +==============================+
 	// |        Update Buttons        |
 	// +==============================+
 	bool clickedOnBtn = false;
@@ -184,7 +256,7 @@ void UpdateAocAppState()
 		VarArrayLoopGet(AocSolutionBtn_t, btn, &aoc->buttons, bIndex);
 		if (!btn->isSeparator)
 		{
-			btn->isHovered = IsMouseOverPrint("AocSolutionBtn_%s", GetAocSolutionStr(btn->solution));
+			btn->isHovered = IsMouseOverPrint("SolutionListBtn_%s", GetAocSolutionStr(btn->solution));
 			if (btn->isHovered)
 			{
 				pigOut->cursorType = PlatCursor_Pointer;
@@ -202,38 +274,7 @@ void UpdateAocAppState()
 	// +==============================+
 	if (clickedOnBtn)
 	{
-		aocArena = &aoc->aocArena;
-		u64 solutionStructSize = GetAocSolutionStructSize(clickedBtnSolution);
-		void* solutionStructPntr = AllocMem(mainHeap, solutionStructSize);
-		
-		PrintLine_Nx(DbgFlag_Inverted, "Running Solution_%s...", GetAocSolutionStr(clickedBtnSolution));
-		TempPushMark();
-		PerfTime_t solutionStartTime = plat->GetPerfTime();
-		
-		MyStr_t solutionAnswer = AocSolutionFunc(clickedBtnSolution, solutionStructSize, solutionStructPntr);
-		
-		PerfTime_t solutionEndTime = plat->GetPerfTime();
-		r64 solutionTimeElapsed = plat->GetPerfTimeDiff(&solutionStartTime, &solutionEndTime);
-		PrintLine_Nx(DbgFlag_Inverted, "Solution finished in %s", FormatMillisecondsNt((u64)RoundR64i(solutionTimeElapsed), TempArena));
-		
-		if (!IsEmptyStr(solutionAnswer))
-		{
-			NotifyPrint_I("Solution to %s: %.*s", GetAocSolutionDisplayStr(clickedBtnSolution), solutionAnswer.length, solutionAnswer.pntr);
-			plat->CopyTextToClipboard(solutionAnswer);
-			aoc->prevSolution = clickedBtnSolution;
-			FreeString(mainHeap, &aoc->previousSolutionAnswer);
-			aoc->previousSolutionAnswer = AllocString(mainHeap, &solutionAnswer);
-		}
-		else
-		{
-			NotifyPrint_W("No solution to %s", GetAocSolutionDisplayStr(clickedBtnSolution));
-			aoc->prevSolution = AocSolution_NumSolutions;
-			FreeString(mainHeap, &aoc->previousSolutionAnswer);
-		}
-		
-		ClearMemArena(&aoc->aocArena);
-		TempPopMark();
-		
+		AocAppState_RunAocSolution(clickedBtnSolution);
 	}
 	
 	// +==============================+
@@ -271,16 +312,18 @@ void RenderAocAppState(FrameBuffer_t* renderBuffer, bool bottomLayer)
 	// +==============================+
 	// |        Render Buttons        |
 	// +==============================+
+	// RcDrawRectangle(aoc->buttonsRec, MonokaiPurple);
+	RcSetViewport(aoc->buttonsRec);
+	v2 buttonsBasePos = aoc->buttonsRec.topLeft - NewVec2(0, aoc->buttonsScroll);
 	RcBindFont(&pig->resources.fonts->large, SelectDefaultFontFace());
 	r32 btnsAlpha = 1.0f; //TODO: Animate me!
-	Color_t btnsBackColor = MonokaiWhite;
-	Color_t btnsTextColor = ColorTransparent(Black, btnsAlpha);
 	VarArrayLoop(&aoc->buttons, bIndex)
 	{
 		VarArrayLoopGet(AocSolutionBtn_t, btn, &aoc->buttons, bIndex);
+		rec mainRec = btn->mainRec + buttonsBasePos;
 		if (btn->isSeparator)
 		{
-			v2 btnTextPos = btn->mainRec.topLeft + btn->textRec.topLeft + btn->textMeasure.offset;
+			v2 btnTextPos = mainRec.topLeft + btn->textRec.topLeft + btn->textMeasure.offset;
 			Vec2Align(&btnTextPos);
 			
 			RcDrawText(btn->displayStr, btnTextPos, MonokaiWhite);
@@ -288,13 +331,21 @@ void RenderAocAppState(FrameBuffer_t* renderBuffer, bool bottomLayer)
 		else
 		{
 			MyStr_t buttonText = TempPrintStr("Day %llu", GetAocSolutionDay(btn->solution));
-			v2 btnTextPos = btn->mainRec.topLeft + btn->textRec.topLeft + btn->textMeasure.offset;
+			v2 btnTextPos = mainRec.topLeft + btn->textRec.topLeft + btn->textMeasure.offset;
 			Vec2Align(&btnTextPos);
+			Color_t successFailureColor = (IsEmptyStr(aoc->previousSolutionAnswer) ? MonokaiRed : MonokaiGreen);
+			Color_t btnColor = ((btn->solution == aoc->prevSolution) ? Black : MonokaiWhite);
+			Color_t textColor = ((btn->solution == aoc->prevSolution) ? successFailureColor : Black);
 			
-			RcDrawRoundedRectangle(btn->mainRec, 10.0f, ColorTransparent(btnsBackColor, btnsAlpha * (btn->isHovered ? 0.95f: 0.7f)));
-			RcDrawText(buttonText, btnTextPos, btnsTextColor);
+			if (btn->solution == aoc->prevSolution)
+			{
+				RcDrawRoundedRectangle(RecInflate(mainRec, 2, 2), 10.0f, ColorTransparent(successFailureColor, btnsAlpha));
+			}
+			RcDrawRoundedRectangle(mainRec, 10.0f, ColorTransparent(btnColor, btnsAlpha * (btn->isHovered ? 0.95f: 0.7f)));
+			RcDrawText(buttonText, btnTextPos, ColorTransparent(textColor, btnsAlpha));
 		}
 	}
+	RcSetViewport(NewRec(Vec2_Zero, ScreenSize));
 	
 	// +==============================+
 	// |      Render Prev Answer      |
