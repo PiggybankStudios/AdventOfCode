@@ -6,9 +6,11 @@ Description:
 	** Holds the AppState_t that facilitates us running advent of code solutions
 */
 
-#include "aoc/aoc.cpp"
+MemArena_t* aocArena = nullptr;
 
-#define MULTIPLIER 998
+#include "aoc/aoc_helpers.cpp"
+#include "aoc/aoc2022.cpp"
+#include "aoc/aoc_enum.cpp"
 
 void AocAppState_RunAocSolution(AocSolution_t solution, bool doSolutionB)
 {
@@ -32,7 +34,9 @@ void AocAppState_RunAocSolution(AocSolution_t solution, bool doSolutionB)
 	if (!IsEmptyStr(solutionAnswer))
 	{
 		PrintLine_I("Solution to %s %s: %.*s", GetAocSolutionDisplayStr(solution), (doSolutionB ? "(B)" : "(A)"), solutionAnswer.length, solutionAnswer.pntr);
+		PrintLineAtx(DbgFlag_Inverted, (doSolutionB ? DbgLevel_Other : DbgLevel_Info), "Solution finished in %s", FormatMillisecondsNt((u64)RoundR64i(solutionTimeElapsed), TempArena));
 		plat->CopyTextToClipboard(solutionAnswer);
+		aoc->clickedAnswerAnim = 1.0f;
 		aoc->previousSolutionAnswer = AllocString(mainHeap, &solutionAnswer);
 	}
 	else
@@ -42,7 +46,6 @@ void AocAppState_RunAocSolution(AocSolution_t solution, bool doSolutionB)
 	
 	ClearMemArena(&aoc->aocArena);
 	TempPopMark();
-	PrintLineAtx(DbgFlag_Inverted, (doSolutionB ? DbgLevel_Other : DbgLevel_Info), "Solution finished in %s", FormatMillisecondsNt((u64)RoundR64i(solutionTimeElapsed), TempArena));
 }
 
 // +--------------------------------------------------------------+

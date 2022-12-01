@@ -270,4 +270,3 @@ void GameGetStartupOptions(const StartupInfo_t* info, StartupOptions_t* options)
 	options->loadingBackScale = 0.0f;
 	options->loadingBackTiling = false;
 }
-

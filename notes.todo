@@ -1,5 +1,8 @@
-[ ] Add a way to easily read in and parse lines of data from files
+[ ] Add all the Gylib stuff to autocomplete list
+[ ] Add all pig stuff to autocomplete list
+[ ] Add all platform layer stuff to autocomplete list
 
+[X] Add a way to easily read in and parse lines of data from files
 [X] Add some system for getting answer A vs answer B for each day
 [X] Add a debug command to run a specific solution
 (X) asdasdasd

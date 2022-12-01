@@ -18,7 +18,8 @@ Date:   11\29\2022
 #define AOC_BTN_INNER_PADDING_LEFTRIGHT 15 //px
 #define AOC_BTN_INNER_PADDING_UP_DOWN   20 //px
 
-#include "aoc/aoc.h"
+#include "aoc/aoc_enum.h"
+#include "aoc/aoc2022.h"
 
 struct AocSolutionBtn_t
 {
