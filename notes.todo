@@ -1,6 +1,6 @@
 [ ] Add a way to easily read in and parse lines of data from files
-[ ] Add some system for getting answer A vs answer B for each day
 
+[X] Add some system for getting answer A vs answer B for each day
 [X] Add a debug command to run a specific solution
 (X) asdasdasd
 [X] Add a debug command to redo the last solution that was run. Make a binding for it?

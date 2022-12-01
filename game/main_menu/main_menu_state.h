@@ -38,7 +38,7 @@ const char* GetMainMenuBtnDisplayStr(MainMenuBtn_t mainMenuBtn)
 {
 	switch (mainMenuBtn)
 	{
-		case MainMenuBtn_AdventOfCode: return "AoC Solutions";
+		case MainMenuBtn_AdventOfCode: return "Solutions";
 		case MainMenuBtn_Exit:         return "Exit";
 		default: return "Unknown";
 	}

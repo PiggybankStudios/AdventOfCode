@@ -16,7 +16,7 @@ void AocAppState_RunAocSolution(AocSolution_t solution, bool doSolutionB)
 	u64 solutionStructSize = GetAocSolutionStructSize(solution);
 	void* solutionStructPntr = AllocMem(mainHeap, solutionStructSize);
 	
-	PrintLine_Nx(DbgFlag_Inverted, "Running Solution_%s %s...", GetAocSolutionStr(solution), (doSolutionB ? "(B)" : "(A)"));
+	PrintLineAtx(DbgFlag_Inverted, (doSolutionB ? DbgLevel_Other : DbgLevel_Info), "Running Solution_%s %s...", GetAocSolutionStr(solution), (doSolutionB ? "(B)" : "(A)"));
 	TempPushMark();
 	PerfTime_t solutionStartTime = plat->GetPerfTime();
 	
@@ -24,7 +24,6 @@ void AocAppState_RunAocSolution(AocSolution_t solution, bool doSolutionB)
 	
 	PerfTime_t solutionEndTime = plat->GetPerfTime();
 	r64 solutionTimeElapsed = plat->GetPerfTimeDiff(&solutionStartTime, &solutionEndTime);
-	PrintLine_Nx(DbgFlag_Inverted, "Solution finished in %s", FormatMillisecondsNt((u64)RoundR64i(solutionTimeElapsed), TempArena));
 	
 	aoc->prevSolution = solution;
 	aoc->prevSolutionIsB = doSolutionB;
@@ -43,6 +42,7 @@ void AocAppState_RunAocSolution(AocSolution_t solution, bool doSolutionB)
 	
 	ClearMemArena(&aoc->aocArena);
 	TempPopMark();
+	PrintLineAtx(DbgFlag_Inverted, (doSolutionB ? DbgLevel_Other : DbgLevel_Info), "Solution finished in %s", FormatMillisecondsNt((u64)RoundR64i(solutionTimeElapsed), TempArena));
 }
 
 // +--------------------------------------------------------------+

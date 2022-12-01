@@ -8,6 +8,8 @@ Description:
 
 MemArena_t* aocArena = nullptr;
 
+#include "aoc/aoc_helpers.cpp"
+
 // +--------------------------------------------------------------+
 // |                             2022                             |
 // +--------------------------------------------------------------+
@@ -16,73 +18,73 @@ MemArena_t* aocArena = nullptr;
 // +==============================+
 MyStr_t AocSolutionFunc_2022_01(AocSolutionStruct_2022_01_t* data, bool doSolutionB)
 {
-	PlatFileContents_t file;
-	plat->ReadFileContents(NewStr("Resources/Text/aoc_2022_01a.txt"), &file);
+	AocOpenFile(file, "input_2022_01.txt");
 	
-	LineParser_t parser = NewLineParser(NewStr(file.length, file.chars));
+	AocVarArrayU64(counts);
+	u64* currentCountPntr = nullptr;
 	
-	VarArray_t elfCalorieCounts;
-	CreateVarArray(&elfCalorieCounts, aocArena, sizeof(u64));
-	u64* currentElfPntr = nullptr;
-	MyStr_t line = MyStr_Empty;
-	while (LineParserGetLine(&parser, &line))
+	AocLoopFile(file, parser, line)
 	{
 		if (IsEmptyStr(line))
 		{
-			// if (currentElfPntr != nullptr) { PrintLine_D("Elf[%llu] has %llu", elfCalorieCounts.length-1, *currentElfPntr); }
-			currentElfPntr = nullptr;
+			// if (currentCountPntr != nullptr) { PrintLine_D("Elf[%llu] has %llu", counts.length-1, *currentCountPntr); }
+			currentCountPntr = nullptr;
 		}
 		else
 		{
-			if (currentElfPntr == nullptr)
+			if (currentCountPntr == nullptr)
 			{
-				currentElfPntr = VarArrayAdd(&elfCalorieCounts, u64);
-				*currentElfPntr = 0;
+				currentCountPntr = VarArrayAdd(&counts, u64);
+				*currentCountPntr = 0;
 			}
 			u64 lineValue = 0;
 			bool parseSuccess = TryParseU64(line, &lineValue);
 			Assert(parseSuccess);
-			*currentElfPntr += lineValue;
+			*currentCountPntr += lineValue;
 		}
 	}
+	AocCloseFile(file);
 	
-	#define AOC_2022_01_NUM_TO_FIND 3
-	i64 foundIndices[AOC_2022_01_NUM_TO_FIND] = {-1, -1, -1};
-	u64 maxCountsTotal = 0;
-	u64 maxMaxCount = 0;
-	for (u8 pass = 0; pass < AOC_2022_01_NUM_TO_FIND; pass++)
+	PrintLine_D("There are %llu elves total", counts.length);
+	
+	if (doSolutionB)
 	{
-		u64 maxCount = 0;
-		u64 maxCountIndex = 0;
-		VarArrayLoop(&elfCalorieCounts, eIndex)
+		i64 foundIndices[3] = {-1, -1, -1};
+		u64 maxCountsTotal = 0;
+		for (u8 pass = 0; pass < ArrayCount(foundIndices); pass++)
 		{
-			VarArrayLoopGet(u64, countPntr, &elfCalorieCounts, eIndex);
-			bool isElfAlreadyFound = false;
-			for (u8 fIndex = 0; fIndex < AOC_2022_01_NUM_TO_FIND; fIndex++)
+			u64 maxCount = 0;
+			u64 maxCountIndex = 0;
+			VarArrayLoop(&counts, eIndex)
 			{
-				if (foundIndices[fIndex] >= 0 && (u64)foundIndices[fIndex] == eIndex) { isElfAlreadyFound = true; break; }
+				VarArrayLoopGet(u64, countPntr, &counts, eIndex);
+				bool isElfAlreadyFound = false;
+				for (u8 fIndex = 0; fIndex < ArrayCount(foundIndices); fIndex++)
+				{
+					if (foundIndices[fIndex] >= 0 && (u64)foundIndices[fIndex] == eIndex) { isElfAlreadyFound = true; break; }
+				}
+				
+				if (!isElfAlreadyFound && maxCount < *countPntr)
+				{
+					maxCount = *countPntr;
+					maxCountIndex = eIndex;
+				}
 			}
 			
-			if (!isElfAlreadyFound && maxCount < *countPntr)
-			{
-				maxCount = *countPntr;
-				maxCountIndex = eIndex;
-			}
+			PrintLine_I("Elf[%llu] has %llu calories", maxCountIndex, maxCount);
+			maxCountsTotal += maxCount;
+			foundIndices[pass] = maxCountIndex;
 		}
 		
-		if (doSolutionB) { PrintLine_D("Elf[%llu] has %llu calories", maxCountIndex, maxCount); }
-		maxCountsTotal += maxCount;
-		if (maxMaxCount < maxCount)
-		{
-			if (!doSolutionB) { PrintLine_D("Elf[%llu] has more with %llu (was %llu)", maxCountIndex, maxCount, maxMaxCount); }
-			maxMaxCount = maxCount;
-		}
-		foundIndices[pass] = maxCountIndex;
+		AocReturnU64(maxCountsTotal);
 	}
-	
-	
-	plat->FreeFileContents(&file);
-	return TempPrintStr("%llu", doSolutionB ? maxCountsTotal : maxMaxCount);
+	else
+	{
+		u64 maxCountIndex = 0;
+		u64 maxCount = AocFindMaxU64(&counts, &maxCountIndex);
+		PrintLine_I("Elf[%llu] has %llu calories", maxCountIndex, maxCount);
+		AocReturnU64(maxCount);
+	}
 }
 
 // +==============================+
