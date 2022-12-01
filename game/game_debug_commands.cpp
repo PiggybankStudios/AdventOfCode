@@ -27,7 +27,7 @@ bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* argument
 	// +==============================+
 	// |             test             |
 	// +==============================+
-	if (StrCompareIgnoreCase(command, "test") == 0)
+	if (StrEqualsIgnoreCase(command, "test"))
 	{
 		WriteLine_D("Nothing to test right now");
 	}
@@ -35,14 +35,14 @@ bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* argument
 	// +==============================+
 	// |     aoc [solution] {a/b}     |
 	// +==============================+
-	else if (StrCompareIgnoreCase(command, "aoc") == 0)
+	else if (StrEqualsIgnoreCase(command, "aoc"))
 	{
 		if (numArguments != 1 && numArguments != 2) { PrintLine_E("Expected 1-2 arguments, got %llu", numArguments); return isValidCommand; }
 		if (!IsAppStateInitialized(AppState_AdventOfCode)) { WriteLine_E("This command only works when the AdventOfCode AppState is active!"); return isValidCommand; }
 		
 		AocSolution_t solution = AocSolution_NumSolutions;
 		bool doSolutionB = false;
-		if (StrCompareIgnoreCase(arguments[0], "prev") == 0 || StrCompareIgnoreCase(arguments[0], "previous") == 0)
+		if (StrEqualsIgnoreCase(arguments[0], "prev") || StrEqualsIgnoreCase(arguments[0], "previous"))
 		{
 			solution = aoc->prevSolution;
 			doSolutionB = aoc->prevSolutionIsB;
@@ -55,12 +55,12 @@ bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* argument
 			for (u64 sIndex = 0; sIndex < AocSolution_NumSolutions; sIndex++)
 			{
 				AocSolution_t checkSolution = (AocSolution_t)sIndex;
-				if (StrCompareIgnoreCase(arguments[0], GetAocSolutionStr(checkSolution)) == 0)
+				if (StrEqualsIgnoreCase(arguments[0], GetAocSolutionStr(checkSolution)))
 				{
 					solution = checkSolution;
 					break;
 				}
-				else if (StrCompareIgnoreCase(arguments[0], GetAocSolutionDisplayStr(checkSolution)) == 0)
+				else if (StrEqualsIgnoreCase(arguments[0], GetAocSolutionDisplayStr(checkSolution)))
 				{
 					solution = checkSolution;
 					break;
@@ -73,8 +73,8 @@ bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* argument
 			}
 			
 			bool parseBoolValue = false;
-			if (StrCompareIgnoreCase(arguments[1], "a") == 0) { doSolutionB = false; }
-			else if (StrCompareIgnoreCase(arguments[1], "b") == 0) { doSolutionB = true; }
+			if (StrEqualsIgnoreCase(arguments[1], "a")) { doSolutionB = false; }
+			else if (StrEqualsIgnoreCase(arguments[1], "b")) { doSolutionB = true; }
 			else if (TryParseBool(arguments[1], &parseBoolValue)) { doSolutionB = parseBoolValue; }
 			else { PrintLine_E("Invalid second argument. Should be \"a\" or \"b\" not \"%.*s\"", arguments[1].length, arguments[1].pntr); return isValidCommand; }
 		}

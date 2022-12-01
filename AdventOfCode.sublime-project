@@ -2654,6 +2654,7 @@
 			"bool SplitDebugLineFileAndFuncStr(MyStr_t filePathAndFuncName, bool fullPath, MyStr_t* filePathOut, MyStr_t* funcNameOut)",
 			"bool StrEndsWith(MyStr_t str, MyStr_t suffix, bool ignoreCase = false)",
 			"bool StrEquals(MyStr_t target, MyStr_t comparison)",
+			"bool StrEqualsIgnoreCase(MyStr_t target, MyStr_t comparison)",
 			"bool StrHashExpand(StrHashDict_t* dict, u64 numItemsRequired)",
 			"bool StrStartsWith(MyStr_t str, MyStr_t prefix, bool ignoreCase = false)",
 			"bool TextParserGetToken(TextParser_t* parser, ParsingToken_t* tokenOut)",

@@ -14,18 +14,18 @@ Description:
 // +--------------------------------------------------------------+
 // |                    Enum Parsing Shorthand                    |
 // +--------------------------------------------------------------+
-#define AocParseEnumFunc(enumBaseName, numWhatSuffix)                              \
-enumBaseName##_t Parse##enumBaseName(MyStr_t enumStr)                              \
-{                                                                                  \
-	for (u64 eIndex = 0; eIndex < enumBaseName##_##numWhatSuffix; eIndex++)        \
-	{                                                                              \
-		enumBaseName##_t enumValue = (enumBaseName##_t)eIndex;                     \
-		if (StrCompareIgnoreCase(enumStr, Get##enumBaseName##Str(enumValue)) == 0) \
-		{                                                                          \
-			return enumValue;                                                      \
-		}                                                                          \
-	}                                                                              \
-	return enumBaseName##_##numWhatSuffix;                                         \
+#define AocParseEnumFunc(enumBaseName, numWhatSuffix)                        \
+enumBaseName##_t Parse##enumBaseName(MyStr_t enumStr)                        \
+{                                                                            \
+	for (u64 eIndex = 0; eIndex < enumBaseName##_##numWhatSuffix; eIndex++)  \
+	{                                                                        \
+		enumBaseName##_t enumValue = (enumBaseName##_t)eIndex;               \
+		if (StrEqualsIgnoreCase(enumStr, Get##enumBaseName##Str(enumValue))) \
+		{                                                                    \
+			return enumValue;                                                \
+		}                                                                    \
+	}                                                                        \
+	return enumBaseName##_##numWhatSuffix;                                   \
 }
 
 // +--------------------------------------------------------------+
