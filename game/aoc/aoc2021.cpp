@@ -56,24 +56,14 @@ const char* GetAoc_2021_02_InstructionStr(Aoc_2021_02_Instruction_t instruction)
 {
 	switch (instruction)
 	{
-		case Aoc_2021_02_Instruction_Up: return "Up";
-		case Aoc_2021_02_Instruction_Down: return "Down";
+		case Aoc_2021_02_Instruction_Up:      return "Up";
+		case Aoc_2021_02_Instruction_Down:    return "Down";
 		case Aoc_2021_02_Instruction_Forward: return "Forward";
 		default: return "Unknown";
 	}
 }
-Aoc_2021_02_Instruction_t ParseAoc_2021_02_Instruction(MyStr_t instructionStr)
-{
-	for (u64 iIndex = 0; iIndex < Aoc_2021_02_Instruction_NumInstructions; iIndex++)
-	{
-		Aoc_2021_02_Instruction_t instruction = (Aoc_2021_02_Instruction_t)iIndex;
-		if (StrCompareIgnoreCase(instructionStr, GetAoc_2021_02_InstructionStr(instruction)) == 0)
-		{
-			return instruction;
-		}
-	}
-	return Aoc_2021_02_Instruction_NumInstructions;
-}
+// const char* ParseAoc_2021_02_InstructionStr(Aoc_2021_02_Instruction_t enumValue)
+AocParseEnumFunc(Aoc_2021_02_Instruction, NumInstructions);
 MyStr_t AocSolutionFunc_2021_02(AocSolutionStruct_2021_02_t* data, bool doSolutionB)
 {
 	AocOpenFile(file, "input_2021_02.txt");

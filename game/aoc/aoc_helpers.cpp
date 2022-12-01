@@ -12,6 +12,23 @@ Description:
 #define AocReturnU64(valueU64) return TempPrintStr("%llu", valueU64)
 
 // +--------------------------------------------------------------+
+// |                    Enum Parsing Shorthand                    |
+// +--------------------------------------------------------------+
+#define AocParseEnumFunc(enumBaseName, numWhatSuffix)                              \
+enumBaseName##_t Parse##enumBaseName(MyStr_t enumStr)                              \
+{                                                                                  \
+	for (u64 eIndex = 0; eIndex < enumBaseName##_##numWhatSuffix; eIndex++)        \
+	{                                                                              \
+		enumBaseName##_t enumValue = (enumBaseName##_t)eIndex;                     \
+		if (StrCompareIgnoreCase(enumStr, Get##enumBaseName##Str(enumValue)) == 0) \
+		{                                                                          \
+			return enumValue;                                                      \
+		}                                                                          \
+	}                                                                              \
+	return enumBaseName##_##numWhatSuffix;                                         \
+}
+
+// +--------------------------------------------------------------+
 // |                    File Opening Shorthand                    |
 // +--------------------------------------------------------------+
 #define AocOpenFile(fileVarName, fileName)                                                                \
