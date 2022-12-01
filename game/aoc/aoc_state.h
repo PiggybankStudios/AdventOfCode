@@ -38,6 +38,7 @@ struct AdventOfCodeState_t
 	
 	MemArena_t aocArena;
 	AocSolution_t prevSolution;
+	bool prevSolutionIsB;
 	MyStr_t previousSolutionAnswer;
 	r32 clickedAnswerAnim;
 	

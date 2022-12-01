@@ -33,21 +33,25 @@ bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* argument
 	}
 	
 	// +==============================+
-	// |        aoc [solution]        |
+	// |     aoc [solution] {a/b}     |
 	// +==============================+
 	else if (StrCompareIgnoreCase(command, "aoc") == 0)
 	{
-		if (numArguments != 1) { PrintLine_E("Expected 1 argument, got %llu", numArguments); return isValidCommand; }
+		if (numArguments != 1 && numArguments != 2) { PrintLine_E("Expected 1-2 arguments, got %llu", numArguments); return isValidCommand; }
 		if (!IsAppStateInitialized(AppState_AdventOfCode)) { WriteLine_E("This command only works when the AdventOfCode AppState is active!"); return isValidCommand; }
 		
 		AocSolution_t solution = AocSolution_NumSolutions;
+		bool doSolutionB = false;
 		if (StrCompareIgnoreCase(arguments[0], "prev") == 0 || StrCompareIgnoreCase(arguments[0], "previous") == 0)
 		{
 			solution = aoc->prevSolution;
+			doSolutionB = aoc->prevSolutionIsB;
 			if (aoc->prevSolution >= AocSolution_NumSolutions) { WriteLine_E("No solution has been run yet!"); return isValidCommand; }
 		}
 		else
 		{
+			if (numArguments != 2) { WriteLine_E("Expected a second argument to choose a or b solution"); return isValidCommand; }
+			
 			for (u64 sIndex = 0; sIndex < AocSolution_NumSolutions; sIndex++)
 			{
 				AocSolution_t checkSolution = (AocSolution_t)sIndex;
@@ -67,9 +71,16 @@ bool GameHandleDebugCommand(MyStr_t command, u64 numArguments, MyStr_t* argument
 				PrintLine_E("Unknown solution name \"%.*s\"", arguments[0].length, arguments[0].pntr);
 				return isValidCommand;
 			}
+			
+			bool parseBoolValue = false;
+			if (StrCompareIgnoreCase(arguments[1], "a") == 0) { doSolutionB = false; }
+			else if (StrCompareIgnoreCase(arguments[1], "b") == 0) { doSolutionB = true; }
+			else if (TryParseBool(arguments[1], &parseBoolValue)) { doSolutionB = parseBoolValue; }
+			else { PrintLine_E("Invalid second argument. Should be \"a\" or \"b\" not \"%.*s\"", arguments[1].length, arguments[1].pntr); return isValidCommand; }
 		}
 		
-		AocAppState_RunAocSolution(solution);
+		
+		AocAppState_RunAocSolution(solution, doSolutionB);
 	}
 	
 	// +==============================+

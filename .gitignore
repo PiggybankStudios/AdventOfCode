@@ -12,7 +12,7 @@
 # /data/Resources/
 /data/Resources/Raw/
 
-/release/
+/release/Raw/
 
 #File Types
 *.vim
