@@ -45,10 +45,84 @@ MyStr_t AocSolutionFunc_2021_01(AocSolutionStruct_2021_01_t* data, bool doSoluti
 // +==============================+
 // |            Day 02            |
 // +==============================+
+enum Aoc_2021_02_Instruction_t
+{
+	Aoc_2021_02_Instruction_Up = 0,
+	Aoc_2021_02_Instruction_Down,
+	Aoc_2021_02_Instruction_Forward,
+	Aoc_2021_02_Instruction_NumInstructions,
+};
+const char* GetAoc_2021_02_InstructionStr(Aoc_2021_02_Instruction_t instruction)
+{
+	switch (instruction)
+	{
+		case Aoc_2021_02_Instruction_Up: return "Up";
+		case Aoc_2021_02_Instruction_Down: return "Down";
+		case Aoc_2021_02_Instruction_Forward: return "Forward";
+		default: return "Unknown";
+	}
+}
+Aoc_2021_02_Instruction_t ParseAoc_2021_02_Instruction(MyStr_t instructionStr)
+{
+	for (u64 iIndex = 0; iIndex < Aoc_2021_02_Instruction_NumInstructions; iIndex++)
+	{
+		Aoc_2021_02_Instruction_t instruction = (Aoc_2021_02_Instruction_t)iIndex;
+		if (StrCompareIgnoreCase(instructionStr, GetAoc_2021_02_InstructionStr(instruction)) == 0)
+		{
+			return instruction;
+		}
+	}
+	return Aoc_2021_02_Instruction_NumInstructions;
+}
 MyStr_t AocSolutionFunc_2021_02(AocSolutionStruct_2021_02_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2021_02 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2021_02.txt");
+	
+	u64 numInstructions = 0;
+	i32 aim = 0;
+	v2i position = Vec2i_Zero;
+	AocLoopFile(file, parser, line)
+	{
+		TempPushMark();
+		u64 numPieces = 0;
+		MyStr_t* linePieces = SplitString(TempArena, line, " ", &numPieces);
+		Assert(numPieces == 2);
+		
+		MyStr_t instructionStr = linePieces[0];
+		Aoc_2021_02_Instruction_t instruction = ParseAoc_2021_02_Instruction(instructionStr);
+		Assert(instruction < Aoc_2021_02_Instruction_NumInstructions);
+		
+		i32 amount = 0;
+		bool parseSuccess = TryParseI32(linePieces[1], &amount);
+		Assert(parseSuccess);
+		
+		if (doSolutionB)
+		{
+			switch (instruction)
+			{
+				case Aoc_2021_02_Instruction_Up: aim -= amount; break;
+				case Aoc_2021_02_Instruction_Down: aim += amount; break;
+				case Aoc_2021_02_Instruction_Forward: position.x += amount; position.y += aim * amount; break;
+			}
+		}
+		else
+		{
+			switch (instruction)
+			{
+				case Aoc_2021_02_Instruction_Up: position.y -= amount; break;
+				case Aoc_2021_02_Instruction_Down: position.y += amount; break;
+				case Aoc_2021_02_Instruction_Forward: position.x += amount; break;
+			}
+		}
+		
+		numInstructions++;
+		TempPopMark();
+	}
+	AocCloseFile(file);
+	PrintLine_D("There are %llu instructions", numInstructions);
+	PrintLine_D("Ending position is (%d, %d)", position.x, position.y);
+	
+	AocReturnI32(position.x * position.y);
 }
 
 // +==============================+

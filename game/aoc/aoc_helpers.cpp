@@ -8,6 +8,7 @@ Description:
 	** do lots of work for us
 */
 
+#define AocReturnI32(valueI32) return TempPrintStr("%d", valueI32)
 #define AocReturnU64(valueU64) return TempPrintStr("%llu", valueU64)
 
 // +--------------------------------------------------------------+
