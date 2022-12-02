@@ -385,4 +385,13 @@ void RenderAocAppState(FrameBuffer_t* renderBuffer, bool bottomLayer)
 			RcDrawText("Copied to clipboard!", clickedTextPos, ColorTransparent(MonokaiWhite, clickedStrAlpha), TextAlignment_Right);
 		}
 	}
+	
+	// +====================================+
+	// | Render Left/Right Click Hint Text  |
+	// +====================================+
+	{
+		RcBindFont(&pig->resources.fonts->debug, SelectDefaultFontFace());
+		v2 hintTextPos = NewVec2(5, 5 + RcGetMaxAscend());
+		RcDrawTextPrint(hintTextPos, MonokaiWhite, "%s=Solution A %s=Solution B", INPUT_DISP_CHAR_MOUSE_LEFT_STR, INPUT_DISP_CHAR_MOUSE_RIGHT_STR);
+	}
 }

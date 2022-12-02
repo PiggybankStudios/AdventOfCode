@@ -29,7 +29,7 @@ MyStr_t AocSolutionFunc_2021_01(AocSolutionStruct_2021_01_t* data, bool doSoluti
 		// PrintLine_D("Line[%llu]: %llu", parser.lineIndex-1, lineValue);
 		if (parser.lineIndex > (doSolutionB ? 3 : 1) && compareValue > prevCompareValue)
 		{
-			PrintLine_D("%llu -> %llu (+%llu)", prevCompareValue, compareValue, compareValue - prevCompareValue);
+			// PrintLine_D("%llu -> %llu (+%llu)", prevCompareValue, compareValue, compareValue - prevCompareValue);
 			numIncreases++;
 		}
 		
@@ -38,6 +38,7 @@ MyStr_t AocSolutionFunc_2021_01(AocSolutionStruct_2021_01_t* data, bool doSoluti
 		prevValue = lineValue;
 	}
 	AocCloseFile(file);
+	PrintLine_D("Out of %llu depth values we increased %llu times", parser.lineIndex, numIncreases);
 	
 	AocReturnU64(numIncreases);
 }
