@@ -118,7 +118,7 @@ const char* GetAoc2022_02_ResultStr(Aoc2022_02_Result_t enumValue)
 		default: return "Unknown";
 	}
 }
-Aoc2022_02_t GetAoc2022_02EnumValueForChar(char c)
+Aoc2022_02_t GetAoc2022_02_ForChar(char c)
 {
 	switch (c)
 	{
@@ -131,7 +131,7 @@ Aoc2022_02_t GetAoc2022_02EnumValueForChar(char c)
 		default: return Aoc2022_02_NumOptions;
 	}
 }
-Aoc2022_02_Result_t GetAoc2022_02_ResultValueForChar(char c)
+Aoc2022_02_Result_t GetAoc2022_02_ResultForChar(char c)
 {
 	switch (c)
 	{
@@ -141,14 +141,14 @@ Aoc2022_02_Result_t GetAoc2022_02_ResultValueForChar(char c)
 		default: return Aoc2022_02_Result_NumOptions;
 	}
 }
-Aoc2022_02_t GetAoc2022_02EnumPair(Aoc2022_02_t enumValue, Aoc2022_02_Result_t otherShouldGetResult)
+Aoc2022_02_t GetAoc2022_02_Pair(Aoc2022_02_t enumValue, Aoc2022_02_Result_t otherShouldGetResult)
 {
 	int resultInt = (int)(enumValue) + (int)(otherShouldGetResult);
 	if (resultInt < 0) { resultInt += 3; }
 	if (resultInt >= 3) { resultInt -= 3; }
 	return (Aoc2022_02_t)resultInt;
 }
-u64 GetAoc2022_02EnumScore(Aoc2022_02_t enumValue)
+u64 GetAoc2022_02_Score(Aoc2022_02_t enumValue)
 {
 	switch (enumValue)
 	{
@@ -170,9 +170,9 @@ u64 GetAoc2022_02_ResultScore(Aoc2022_02_Result_t result)
 }
 Aoc2022_02_Result_t GetAoc2022_02_ResultForMoves(Aoc2022_02_t yourMove, Aoc2022_02_t opponentMove)
 {
-	if (yourMove == GetAoc2022_02EnumPair(opponentMove, Aoc2022_02_Result_Win))  { return Aoc2022_02_Result_Win;  }
-	if (yourMove == GetAoc2022_02EnumPair(opponentMove, Aoc2022_02_Result_Draw)) { return Aoc2022_02_Result_Draw; }
-	if (yourMove == GetAoc2022_02EnumPair(opponentMove, Aoc2022_02_Result_Lose)) { return Aoc2022_02_Result_Lose; }
+	if (yourMove == GetAoc2022_02_Pair(opponentMove, Aoc2022_02_Result_Win))  { return Aoc2022_02_Result_Win;  }
+	if (yourMove == GetAoc2022_02_Pair(opponentMove, Aoc2022_02_Result_Draw)) { return Aoc2022_02_Result_Draw; }
+	if (yourMove == GetAoc2022_02_Pair(opponentMove, Aoc2022_02_Result_Lose)) { return Aoc2022_02_Result_Lose; }
 	return Aoc2022_02_Result_NumOptions;
 }
 MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSolutionB)
@@ -187,32 +187,30 @@ MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSoluti
 	AocLoopFile(file, parser, line)
 	{
 		Assert(line.length == 3);
-		Aoc2022_02_t opponentMove = GetAoc2022_02EnumValueForChar(line.chars[0]);
-		Aoc2022_02_t yourMove = GetAoc2022_02EnumValueForChar(line.chars[2]);
+		Aoc2022_02_t opponentMove = GetAoc2022_02_ForChar(line.chars[0]);
+		Aoc2022_02_t yourMove = GetAoc2022_02_ForChar(line.chars[2]);
 		
 		u64 roundScore = 0;
 		
 		if (doSolutionB)
 		{
-			Aoc2022_02_Result_t expectedResult = GetAoc2022_02_ResultValueForChar(line.chars[2]);
-			yourMove = GetAoc2022_02EnumPair(opponentMove, expectedResult);
-			// PrintLine_D("Opponent throws %s. You need to %s. You throw %s. roundScore is %d", GetAoc2022_02Str(opponentMove), GetAoc2022_02_ResultStr(expectedResult), GetAoc2022_02Str(yourActualMove), roundScore);
-		}
-		else
-		{
-			// PrintLine_D("Opponent throws %s. You throw %s. roundScore is %d", GetAoc2022_02Str(opponentMove), GetAoc2022_02Str(yourMove), roundScore);
+			Aoc2022_02_Result_t expectedResult = GetAoc2022_02_ResultForChar(line.chars[2]);
+			yourMove = GetAoc2022_02_Pair(opponentMove, expectedResult);
+			// PrintLine_D("You need to %s", GetAoc2022_02_ResultStr(expectedResult));
 		}
 		
-		roundScore += GetAoc2022_02EnumScore(yourMove);
-		roundScore += GetAoc2022_02_ResultScore(GetAoc2022_02_ResultForMoves(yourMove, opponentMove));
+		Aoc2022_02_Result_t roundResult = GetAoc2022_02_ResultForMoves(yourMove, opponentMove);
+		roundScore += GetAoc2022_02_Score(yourMove);
+		roundScore += GetAoc2022_02_ResultScore(roundResult);
+		// PrintLine_D("Opponent throws %s. You throw %s. roundScore is %d", GetAoc2022_02Str(opponentMove), GetAoc2022_02Str(yourMove), roundScore);
 		
 		yourScore += roundScore;
 		
 		numInstructions++;
 	}
 	AocCloseFile(file);
-	PrintLine_D("%llu instructions", numInstructions);
-	PrintLine_D("%llu score", yourScore);
+	PrintLine_D("Total Rounds: %llu", numInstructions);
+	PrintLine_D("Your Score: %llu", yourScore);
 	
 	AocReturnU64(yourScore);
 }
