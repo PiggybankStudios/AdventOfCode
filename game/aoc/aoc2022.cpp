@@ -91,15 +91,105 @@ MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSoluti
 	AocVarArrayU64(counts);
 	u64* currentCountPntr = nullptr;
 	
+	u64 numInstructions = 0;
+	u64 yourScore = 0;
 	AocLoopFile(file, parser, line)
 	{
-		u64 lineValue = 0;
-		bool parseSuccess = TryParseU64(line, &lineValue);
-		Assert(parseSuccess);
+		Assert(line.length == 3);
+		char opponent = line.chars[0];
+		char you = line.chars[2];
+		u64 roundScore = 0;
+		
+		if (doSolutionB)
+		{
+			char yourChoice = 0;
+			if (you == 'X') //lose
+			{
+				roundScore += 0;
+				if (opponent == 'A') { yourChoice = 'Z'; } //lose scissors to rock
+				if (opponent == 'B') { yourChoice = 'X'; } //lose rock to paper
+				if (opponent == 'C') { yourChoice = 'Y'; } //lose paper to scissors
+			}
+			else if (you == 'Y') //draw
+			{
+				roundScore += 3;
+				if (opponent == 'A') { yourChoice = 'X'; } //draw rock to rock
+				if (opponent == 'B') { yourChoice = 'Y'; } //draw paper to paper
+				if (opponent == 'C') { yourChoice = 'Z'; } //draw scissors to scissors
+			}
+			else if (you == 'Z') //win
+			{
+				roundScore += 6;
+				if (opponent == 'A') { yourChoice = 'Y'; } //win paper to rock
+				if (opponent == 'B') { yourChoice = 'Z'; } //win scissors to paper
+				if (opponent == 'C') { yourChoice = 'X'; } //win rock to scissors
+			}
+			
+			if (yourChoice == 'X') { roundScore += 1; }
+			if (yourChoice == 'Y') { roundScore += 2; }
+			if (yourChoice == 'Z') { roundScore += 3; }
+		}
+		else
+		{
+			if (you == 'X') { roundScore += 1; }
+			if (you == 'Y') { roundScore += 2; }
+			if (you == 'Z') { roundScore += 3; }
+			if (opponent == 'A') //rock
+			{
+				if (you == 'X') //rock
+				{
+					roundScore += 3; //draw
+				}
+				else if (you == 'Y') //paper
+				{
+					roundScore += 6; //win
+				}
+				else if (you == 'Z') //scissors
+				{
+					roundScore += 0; //lose
+				}
+			}
+			else if (opponent == 'B') //paper
+			{
+				if (you == 'X') //rock
+				{
+					roundScore += 0; //lose
+				}
+				else if (you == 'Y') //paper
+				{
+					roundScore += 3; //draw
+				}
+				else if (you == 'Z') //scissors
+				{
+					roundScore += 6; //win
+				}
+			}
+			else if (opponent == 'C') //scissors
+			{
+				if (you == 'X') //rock
+				{
+					roundScore += 6; //win
+				}
+				else if (you == 'Y') //paper
+				{
+					roundScore += 0; //lose
+				}
+				else if (you == 'Z') //scissors
+				{
+					roundScore += 3; //draw
+				}
+			}
+		}
+		
+		yourScore += roundScore;
+		
+		numInstructions++;
 	}
 	AocCloseFile(file);
+	PrintLine_D("%llu instructions", numInstructions);
+	PrintLine_D("%llu score", yourScore);
 	
-	return MyStr_Empty;
+	AocReturnU64(yourScore);
 }
 
 // +==============================+
