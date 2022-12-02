@@ -84,6 +84,97 @@ MyStr_t AocSolutionFunc_2022_01(AocSolutionStruct_2022_01_t* data, bool doSoluti
 // +==============================+
 // |            Day 02            |
 // +==============================+
+enum Aoc2022_02_t
+{
+	Aoc2022_02_Rock = 0,
+	Aoc2022_02_Paper,
+	Aoc2022_02_Scissors,
+	Aoc2022_02_NumOptions,
+};
+const char* GetAoc2022_02Str(Aoc2022_02_t enumValue)
+{
+	switch (enumValue)
+	{
+		case Aoc2022_02_Rock:     return "Rock";
+		case Aoc2022_02_Paper:    return "Paper";
+		case Aoc2022_02_Scissors: return "Scissors";
+		default: return "Unknown";
+	}
+}
+enum Aoc2022_02_Result_t
+{
+	Aoc2022_02_Result_Lose = -1,
+	Aoc2022_02_Result_Draw = 0,
+	Aoc2022_02_Result_Win = 1,
+	Aoc2022_02_Result_NumOptions,
+};
+const char* GetAoc2022_02_ResultStr(Aoc2022_02_Result_t enumValue)
+{
+	switch (enumValue)
+	{
+		case Aoc2022_02_Result_Lose: return "Lose";
+		case Aoc2022_02_Result_Draw: return "Draw";
+		case Aoc2022_02_Result_Win:  return "Win";
+		default: return "Unknown";
+	}
+}
+Aoc2022_02_t GetAoc2022_02EnumValueForChar(char c)
+{
+	switch (c)
+	{
+		case 'A': return Aoc2022_02_Rock;
+		case 'B': return Aoc2022_02_Paper;
+		case 'C': return Aoc2022_02_Scissors;
+		case 'X': return Aoc2022_02_Rock;
+		case 'Y': return Aoc2022_02_Paper;
+		case 'Z': return Aoc2022_02_Scissors;
+		default: return Aoc2022_02_NumOptions;
+	}
+}
+Aoc2022_02_Result_t GetAoc2022_02_ResultValueForChar(char c)
+{
+	switch (c)
+	{
+		case 'X': return Aoc2022_02_Result_Lose;
+		case 'Y': return Aoc2022_02_Result_Draw;
+		case 'Z': return Aoc2022_02_Result_Win;
+		default: return Aoc2022_02_Result_NumOptions;
+	}
+}
+Aoc2022_02_t GetAoc2022_02EnumPair(Aoc2022_02_t enumValue, Aoc2022_02_Result_t otherShouldGetResult)
+{
+	int resultInt = (int)(enumValue) + (int)(otherShouldGetResult);
+	if (resultInt < 0) { resultInt += 3; }
+	if (resultInt >= 3) { resultInt -= 3; }
+	return (Aoc2022_02_t)resultInt;
+}
+u64 GetAoc2022_02EnumScore(Aoc2022_02_t enumValue)
+{
+	switch (enumValue)
+	{
+		case Aoc2022_02_Rock:     return 1;
+		case Aoc2022_02_Paper:    return 2;
+		case Aoc2022_02_Scissors: return 3;
+		default: return 0;
+	}
+}
+u64 GetAoc2022_02_ResultScore(Aoc2022_02_Result_t result)
+{
+	switch (result)
+	{
+		case Aoc2022_02_Result_Lose: return 0;
+		case Aoc2022_02_Result_Draw: return 3;
+		case Aoc2022_02_Result_Win:  return 6;
+		default: return 0;
+	}
+}
+Aoc2022_02_Result_t GetAoc2022_02_ResultForMoves(Aoc2022_02_t yourMove, Aoc2022_02_t opponentMove)
+{
+	if (yourMove == GetAoc2022_02EnumPair(opponentMove, Aoc2022_02_Result_Win))  { return Aoc2022_02_Result_Win;  }
+	if (yourMove == GetAoc2022_02EnumPair(opponentMove, Aoc2022_02_Result_Draw)) { return Aoc2022_02_Result_Draw; }
+	if (yourMove == GetAoc2022_02EnumPair(opponentMove, Aoc2022_02_Result_Lose)) { return Aoc2022_02_Result_Lose; }
+	return Aoc2022_02_Result_NumOptions;
+}
 MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSolutionB)
 {
 	AocOpenFile(file, "input_2022_02.txt");
@@ -96,90 +187,24 @@ MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSoluti
 	AocLoopFile(file, parser, line)
 	{
 		Assert(line.length == 3);
-		char opponent = line.chars[0];
-		char you = line.chars[2];
+		Aoc2022_02_t opponentMove = GetAoc2022_02EnumValueForChar(line.chars[0]);
+		Aoc2022_02_t yourMove = GetAoc2022_02EnumValueForChar(line.chars[2]);
+		
 		u64 roundScore = 0;
 		
 		if (doSolutionB)
 		{
-			char yourChoice = 0;
-			if (you == 'X') //lose
-			{
-				roundScore += 0;
-				if (opponent == 'A') { yourChoice = 'Z'; } //lose scissors to rock
-				if (opponent == 'B') { yourChoice = 'X'; } //lose rock to paper
-				if (opponent == 'C') { yourChoice = 'Y'; } //lose paper to scissors
-			}
-			else if (you == 'Y') //draw
-			{
-				roundScore += 3;
-				if (opponent == 'A') { yourChoice = 'X'; } //draw rock to rock
-				if (opponent == 'B') { yourChoice = 'Y'; } //draw paper to paper
-				if (opponent == 'C') { yourChoice = 'Z'; } //draw scissors to scissors
-			}
-			else if (you == 'Z') //win
-			{
-				roundScore += 6;
-				if (opponent == 'A') { yourChoice = 'Y'; } //win paper to rock
-				if (opponent == 'B') { yourChoice = 'Z'; } //win scissors to paper
-				if (opponent == 'C') { yourChoice = 'X'; } //win rock to scissors
-			}
-			
-			if (yourChoice == 'X') { roundScore += 1; }
-			if (yourChoice == 'Y') { roundScore += 2; }
-			if (yourChoice == 'Z') { roundScore += 3; }
+			Aoc2022_02_Result_t expectedResult = GetAoc2022_02_ResultValueForChar(line.chars[2]);
+			yourMove = GetAoc2022_02EnumPair(opponentMove, expectedResult);
+			// PrintLine_D("Opponent throws %s. You need to %s. You throw %s. roundScore is %d", GetAoc2022_02Str(opponentMove), GetAoc2022_02_ResultStr(expectedResult), GetAoc2022_02Str(yourActualMove), roundScore);
 		}
 		else
 		{
-			if (you == 'X') { roundScore += 1; }
-			if (you == 'Y') { roundScore += 2; }
-			if (you == 'Z') { roundScore += 3; }
-			if (opponent == 'A') //rock
-			{
-				if (you == 'X') //rock
-				{
-					roundScore += 3; //draw
-				}
-				else if (you == 'Y') //paper
-				{
-					roundScore += 6; //win
-				}
-				else if (you == 'Z') //scissors
-				{
-					roundScore += 0; //lose
-				}
-			}
-			else if (opponent == 'B') //paper
-			{
-				if (you == 'X') //rock
-				{
-					roundScore += 0; //lose
-				}
-				else if (you == 'Y') //paper
-				{
-					roundScore += 3; //draw
-				}
-				else if (you == 'Z') //scissors
-				{
-					roundScore += 6; //win
-				}
-			}
-			else if (opponent == 'C') //scissors
-			{
-				if (you == 'X') //rock
-				{
-					roundScore += 6; //win
-				}
-				else if (you == 'Y') //paper
-				{
-					roundScore += 0; //lose
-				}
-				else if (you == 'Z') //scissors
-				{
-					roundScore += 3; //draw
-				}
-			}
+			// PrintLine_D("Opponent throws %s. You throw %s. roundScore is %d", GetAoc2022_02Str(opponentMove), GetAoc2022_02Str(yourMove), roundScore);
 		}
+		
+		roundScore += GetAoc2022_02EnumScore(yourMove);
+		roundScore += GetAoc2022_02_ResultScore(GetAoc2022_02_ResultForMoves(yourMove, opponentMove));
 		
 		yourScore += roundScore;
 		
