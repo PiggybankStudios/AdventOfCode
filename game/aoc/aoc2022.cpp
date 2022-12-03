@@ -220,8 +220,19 @@ MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSoluti
 // +==============================+
 MyStr_t AocSolutionFunc_2022_03(AocSolutionStruct_2022_03_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_03 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	// AocOpenFile(file, "input_2022_03.txt");
+	AocOpenFile(file, "input_2022_03_ex.txt");
+	
+	// AocVarArrayU64(counts);
+	
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		//TODO: Implement me!
+	}
+	AocCloseFile(file);
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
