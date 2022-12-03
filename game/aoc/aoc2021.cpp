@@ -121,8 +121,128 @@ MyStr_t AocSolutionFunc_2021_02(AocSolutionStruct_2021_02_t* data, bool doSoluti
 // +==============================+
 MyStr_t AocSolutionFunc_2021_03(AocSolutionStruct_2021_03_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2021_03 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2021_03.txt");
+	// AocOpenFile(file, "input_2021_03_ex.txt");
+	
+	VarArray_t oxygenCandidateStrs;
+	CreateVarArray(&oxygenCandidateStrs, aocArena, sizeof(MyStr_t));
+	VarArray_t co2CandidateStrs;
+	CreateVarArray(&co2CandidateStrs, aocArena, sizeof(MyStr_t));
+	
+	#define MAX_NUM_BITS 12
+	u64 bitOneCounts[MAX_NUM_BITS];
+	ClearArray(bitOneCounts);
+	u64 numBits = 0;
+	u64 numEntries = 0;
+	AocLoopFile(file, parser, line)
+	{
+		MyStr_t* newOxygenCandidateStr = VarArrayAdd(&oxygenCandidateStrs, MyStr_t);
+		*newOxygenCandidateStr = line;
+		MyStr_t* newCo2CandidateStr = VarArrayAdd(&co2CandidateStrs, MyStr_t);
+		*newCo2CandidateStr = line;
+		if (numBits == 0) { numBits = line.length; }
+		else { Assert(line.length == numBits); }
+		for (u64 bIndex = 0; bIndex < numBits; bIndex++)
+		{
+			if (line.chars[bIndex] == '1') { bitOneCounts[bIndex]++; }
+		}
+		numEntries++;
+	}
+	
+	if (doSolutionB)
+	{
+		u64 oxygenBitOneCounts[MAX_NUM_BITS];
+		u64 co2BitOneCounts[MAX_NUM_BITS];
+		MyMemCopy(&oxygenBitOneCounts[0], &bitOneCounts[0], sizeof(u64) * MAX_NUM_BITS);
+		MyMemCopy(&co2BitOneCounts[0], &bitOneCounts[0], sizeof(u64) * MAX_NUM_BITS);
+		
+		for (u64 bIndex = 0; bIndex < numBits; bIndex++)
+		{
+			PrintLine_I("There are now %llu/%llu 1's in column[%llu] for oxygen", oxygenBitOneCounts[bIndex], oxygenCandidateStrs.length, bIndex);
+			PrintLine_I("There are now %llu/%llu 1's in column[%llu] for CO2", co2BitOneCounts[bIndex], co2CandidateStrs.length, bIndex);
+			char oxygenExpectedChar = ((oxygenBitOneCounts[bIndex] >= (oxygenCandidateStrs.length - oxygenBitOneCounts[bIndex])) ? '1' : '0');
+			char co2ExpectedChar = ((co2BitOneCounts[bIndex] >= (co2CandidateStrs.length - co2BitOneCounts[bIndex])) ? '0' : '1');
+			if (oxygenCandidateStrs.length > 1)
+			{
+				for (u64 sIndex = 0; sIndex < oxygenCandidateStrs.length; )
+				{
+					MyStr_t* candidateStr = VarArrayGet(&oxygenCandidateStrs, sIndex, MyStr_t);
+					if (candidateStr->chars[bIndex] != oxygenExpectedChar)
+					{
+						for (u64 bIndex2 = 0; bIndex2 < numBits; bIndex2++)
+						{
+							if (candidateStr->chars[bIndex2] == '1') { Assert(oxygenBitOneCounts[bIndex2] > 0); oxygenBitOneCounts[bIndex2]--; }
+						}
+						VarArrayRemove(&oxygenCandidateStrs, sIndex, MyStr_t);
+						//don't increment sIndex
+					}
+					else { sIndex++; }
+				}
+			}
+			if (co2CandidateStrs.length > 1)
+			{
+				for (u64 sIndex = 0; sIndex < co2CandidateStrs.length; )
+				{
+					MyStr_t* candidateStr = VarArrayGet(&co2CandidateStrs, sIndex, MyStr_t);
+					if (candidateStr->chars[bIndex] != co2ExpectedChar)
+					{
+						for (u64 bIndex2 = 0; bIndex2 < numBits; bIndex2++)
+						{
+							if (candidateStr->chars[bIndex2] == '1') { Assert(co2BitOneCounts[bIndex2] > 0); co2BitOneCounts[bIndex2]--; }
+						}
+						VarArrayRemove(&co2CandidateStrs, sIndex, MyStr_t);
+						//don't increment sIndex
+					}
+					else { sIndex++; }
+				}
+			}
+			
+			PrintLine_D("Weeded down to %llu and %llu candidates after bit[%llu] (filtered for %c and %c)", oxygenCandidateStrs.length, co2CandidateStrs.length, bIndex, oxygenExpectedChar, co2ExpectedChar);
+		}
+		
+		Assert(oxygenCandidateStrs.length == 1);
+		Assert(co2CandidateStrs.length == 1);
+		MyStr_t oxygenGeneratorRatingBinStr = *VarArrayGetHard(&oxygenCandidateStrs, 0, MyStr_t);
+		MyStr_t co2ScrubberRatingBinStr = *VarArrayGetHard(&co2CandidateStrs, 0, MyStr_t);
+		
+		u64 oxygenGeneratorRating = 0;
+		bool parseSuccess = TryParseU64(TempPrintStr("0b%.*s", oxygenGeneratorRatingBinStr.length, oxygenGeneratorRatingBinStr.pntr), &oxygenGeneratorRating);
+		Assert(parseSuccess);
+		u64 co2ScrubberRating = 0;
+		parseSuccess = TryParseU64(TempPrintStr("0b%.*s", co2ScrubberRatingBinStr.length, co2ScrubberRatingBinStr.pntr), &co2ScrubberRating);
+		Assert(parseSuccess);
+		
+		PrintLine_D("Oxygen Generator Rating: %llu (0b%.*s)", oxygenGeneratorRating, oxygenGeneratorRatingBinStr.length, oxygenGeneratorRatingBinStr.pntr);
+		PrintLine_D("CO2 Scrubber Rating: %llu (0b%.*s)", co2ScrubberRating, co2ScrubberRatingBinStr.length, co2ScrubberRatingBinStr.pntr);
+		
+		AocCloseFile(file);
+		AocReturnU64(oxygenGeneratorRating * co2ScrubberRating);
+	}
+	else
+	{
+		AocCloseFile(file);
+		
+		char gammaRateBinChars[2+MAX_NUM_BITS];
+		char epsilonRateBinChars[2+MAX_NUM_BITS];
+		gammaRateBinChars[0] = '0'; gammaRateBinChars[1] = 'b';
+		epsilonRateBinChars[0] = '0'; epsilonRateBinChars[1] = 'b';
+		for (u64 bIndex = 0; bIndex < numBits; bIndex++)
+		{
+			gammaRateBinChars[2+bIndex] = ((bitOneCounts[bIndex] >= numEntries/2) ? '1' : '0');
+			epsilonRateBinChars[2+bIndex] = ((bitOneCounts[bIndex] >= numEntries/2) ? '0' : '1');
+			PrintLine_D("Bit[%llu]: %llu/%llu (Gamma:%c Epsiolon:%c)", bIndex, bitOneCounts[bIndex], numEntries, gammaRateBinChars[2+bIndex], epsilonRateBinChars[2+bIndex]);
+		}
+		u64 gammaRate = 0;
+		u64 epsilonRate = 0;
+		bool parseSuccess = TryParseU64(NewStr(2+numBits, &gammaRateBinChars[0]), &gammaRate);
+		Assert(parseSuccess);
+		parseSuccess = TryParseU64(NewStr(2+numBits, &epsilonRateBinChars[0]), &epsilonRate);
+		Assert(parseSuccess);
+		PrintLine_D("Gamma Rate: %llu", gammaRate);
+		PrintLine_D("Epsilon Rate: %llu", epsilonRate);
+		
+		AocReturnU64(gammaRate * epsilonRate);
+	}
 }
 
 // +==============================+
