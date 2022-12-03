@@ -218,17 +218,98 @@ MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSoluti
 // +==============================+
 // |            Day 03            |
 // +==============================+
+u64 GetItemCode(char item)
+{
+	if (item >= 'a' && item <= 'z') { return 1 + (item - 'a'); }
+	if (item >= 'A' && item <= 'Z') { return 27 + (item - 'A'); }
+	return 0;
+}
 MyStr_t AocSolutionFunc_2022_03(AocSolutionStruct_2022_03_t* data, bool doSolutionB)
 {
-	// AocOpenFile(file, "input_2022_03.txt");
-	AocOpenFile(file, "input_2022_03_ex.txt");
+	AocOpenFile(file, "input_2022_03.txt");
+	// AocOpenFile(file, "input_2022_03_ex.txt");
 	
 	// AocVarArrayU64(counts);
 	
+	u64 numBagsInGroup = 0;
+	MyStr_t groupStrs[3];
 	u64 result = 0;
 	AocLoopFile(file, parser, line)
 	{
-		//TODO: Implement me!
+		if (doSolutionB)
+		{
+			// PrintLine_D("Putting in %llu", numBagsInGroup);
+			groupStrs[numBagsInGroup] = line;
+			numBagsInGroup++;
+			
+			if (numBagsInGroup >= 3)
+			{
+				bool foundCode = false;
+				for (u64 cIndex1 = 0; cIndex1 < groupStrs[0].length; cIndex1++)
+				{
+					char item = groupStrs[0].chars[cIndex1];
+					bool inBag2 = false;
+					for (u64 cIndex2 = 0; cIndex2 < groupStrs[1].length; cIndex2++)
+					{
+						char itemIn2 = groupStrs[1].chars[cIndex2];
+						if (itemIn2 == item) { inBag2 = true; break; }
+					}
+					bool inBag3 = false;
+					for (u64 cIndex3 = 0; cIndex3 < groupStrs[2].length; cIndex3++)
+					{
+						char itemIn3 = groupStrs[2].chars[cIndex3];
+						if (itemIn3 == item) { inBag3 = true; break; }
+					}
+					if (inBag2 && inBag3)
+					{
+						result += GetItemCode(item);
+						// PrintLine_D("Group has code %c", item);
+						foundCode = true;
+						break;
+					}
+				}
+				
+				if (!foundCode)
+				{
+					PrintLine_E("Failed to find common item in:\n%.*s\n%.*s\n%.*s",
+						groupStrs[0].length, groupStrs[0].pntr,
+						groupStrs[1].length, groupStrs[1].pntr,
+						groupStrs[2].length, groupStrs[2].pntr
+					);
+				}
+				
+				numBagsInGroup = 0;
+			}
+		}
+		else
+		{
+			Assert(line.length%2 == 0);
+			MyStr_t firstCompartmentStr = StrSubstring(&line, 0, line.length/2);
+			MyStr_t secondCompartmentStr = StrSubstring(&line, line.length/2);
+			PrintLine_D("%.*s | %.*s", firstCompartmentStr.length, firstCompartmentStr.pntr, secondCompartmentStr.length, secondCompartmentStr.pntr);
+			u64 numSharedItems = 0;
+			char sharedItems[64];
+			for (u64 cIndex = 0; cIndex < firstCompartmentStr.length; cIndex++)
+			{
+				char item = firstCompartmentStr.chars[cIndex];
+				bool foundInSecond = false;
+				for (u64 cIndex2 = 0; cIndex2 < secondCompartmentStr.length; cIndex2++)
+				{
+					if (item == secondCompartmentStr.chars[cIndex2]) { foundInSecond = true; break; }
+				}
+				if (foundInSecond)
+				{
+					if (numSharedItems < ArrayCount(sharedItems) && !FindSubstring(NewStr(numSharedItems, &sharedItems[0]), NewStr(1, &item)))
+					{
+						PrintLine_D("Bag contains \'%c\' in both compartments", item);
+						sharedItems[numSharedItems] = item;
+						numSharedItems++;
+						
+						result += GetItemCode(item);
+					}
+				}
+			}
+		}
 	}
 	AocCloseFile(file);
 	
