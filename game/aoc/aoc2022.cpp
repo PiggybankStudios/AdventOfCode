@@ -218,22 +218,25 @@ MyStr_t AocSolutionFunc_2022_02(AocSolutionStruct_2022_02_t* data, bool doSoluti
 // +==============================+
 // |            Day 03            |
 // +==============================+
-u64 GetItemCode(char item)
+u64 Aoc2022_03_GetItemPriority(char itemChar)
 {
-	if (item >= 'a' && item <= 'z') { return 1 + (item - 'a'); }
-	if (item >= 'A' && item <= 'Z') { return 27 + (item - 'A'); }
+	if (itemChar >= 'a' && itemChar <= 'z') { return 1 + (itemChar - 'a'); }
+	if (itemChar >= 'A' && itemChar <= 'Z') { return 27 + (itemChar - 'A'); }
 	return 0;
+}
+u64 Aoc2022_03_IsItemCharInStr(MyStr_t bagStr, char itemChar)
+{
+	return FindSubstring(bagStr, NewStr(1, &itemChar));
 }
 MyStr_t AocSolutionFunc_2022_03(AocSolutionStruct_2022_03_t* data, bool doSolutionB)
 {
 	AocOpenFile(file, "input_2022_03.txt");
 	// AocOpenFile(file, "input_2022_03_ex.txt");
 	
-	// AocVarArrayU64(counts);
-	
 	u64 numBagsInGroup = 0;
 	MyStr_t groupStrs[3];
 	u64 result = 0;
+	u64 numGroups = 0;
 	AocLoopFile(file, parser, line)
 	{
 		if (doSolutionB)
@@ -247,23 +250,13 @@ MyStr_t AocSolutionFunc_2022_03(AocSolutionStruct_2022_03_t* data, bool doSoluti
 				bool foundCode = false;
 				for (u64 cIndex1 = 0; cIndex1 < groupStrs[0].length; cIndex1++)
 				{
-					char item = groupStrs[0].chars[cIndex1];
-					bool inBag2 = false;
-					for (u64 cIndex2 = 0; cIndex2 < groupStrs[1].length; cIndex2++)
+					char itemChar = groupStrs[0].chars[cIndex1];
+					bool isItemInBag2 = Aoc2022_03_IsItemCharInStr(groupStrs[1], itemChar);
+					bool isItemInBag3 = Aoc2022_03_IsItemCharInStr(groupStrs[2], itemChar);
+					if (isItemInBag2 && isItemInBag3)
 					{
-						char itemIn2 = groupStrs[1].chars[cIndex2];
-						if (itemIn2 == item) { inBag2 = true; break; }
-					}
-					bool inBag3 = false;
-					for (u64 cIndex3 = 0; cIndex3 < groupStrs[2].length; cIndex3++)
-					{
-						char itemIn3 = groupStrs[2].chars[cIndex3];
-						if (itemIn3 == item) { inBag3 = true; break; }
-					}
-					if (inBag2 && inBag3)
-					{
-						result += GetItemCode(item);
-						// PrintLine_D("Group has code %c", item);
+						result += Aoc2022_03_GetItemPriority(itemChar);
+						// PrintLine_D("Group has code %c", itemChar);
 						foundCode = true;
 						break;
 					}
@@ -278,40 +271,44 @@ MyStr_t AocSolutionFunc_2022_03(AocSolutionStruct_2022_03_t* data, bool doSoluti
 					);
 				}
 				
+				numGroups++;
 				numBagsInGroup = 0;
 			}
 		}
 		else
 		{
 			Assert(line.length%2 == 0);
-			MyStr_t firstCompartmentStr = StrSubstring(&line, 0, line.length/2);
-			MyStr_t secondCompartmentStr = StrSubstring(&line, line.length/2);
-			PrintLine_D("%.*s | %.*s", firstCompartmentStr.length, firstCompartmentStr.pntr, secondCompartmentStr.length, secondCompartmentStr.pntr);
-			u64 numSharedItems = 0;
-			char sharedItems[64];
-			for (u64 cIndex = 0; cIndex < firstCompartmentStr.length; cIndex++)
+			MyStr_t bagFirstHalf = StrSubstring(&line, 0, line.length/2);
+			MyStr_t bagSecondHalf = StrSubstring(&line, line.length/2);
+			// PrintLine_D("%.*s | %.*s", bagFirstHalf.length, bagFirstHalf.pntr, bagSecondHalf.length, bagSecondHalf.pntr);
+			char sharedItemChars[64];
+			MyStr_t sharedItemsStr = NewStr(0, &sharedItemChars[0]);
+			for (u64 cIndex = 0; cIndex < bagFirstHalf.length; cIndex++)
 			{
-				char item = firstCompartmentStr.chars[cIndex];
+				char itemChar = bagFirstHalf.chars[cIndex];
 				bool foundInSecond = false;
-				for (u64 cIndex2 = 0; cIndex2 < secondCompartmentStr.length; cIndex2++)
+				for (u64 cIndex2 = 0; cIndex2 < bagSecondHalf.length; cIndex2++)
 				{
-					if (item == secondCompartmentStr.chars[cIndex2]) { foundInSecond = true; break; }
+					if (itemChar == bagSecondHalf.chars[cIndex2]) { foundInSecond = true; break; }
 				}
 				if (foundInSecond)
 				{
-					if (numSharedItems < ArrayCount(sharedItems) && !FindSubstring(NewStr(numSharedItems, &sharedItems[0]), NewStr(1, &item)))
+					if (!Aoc2022_03_IsItemCharInStr(sharedItemsStr, itemChar) &&
+						sharedItemsStr.length < ArrayCount(sharedItemChars))
 					{
-						PrintLine_D("Bag contains \'%c\' in both compartments", item);
-						sharedItems[numSharedItems] = item;
-						numSharedItems++;
-						
-						result += GetItemCode(item);
+						// PrintLine_D("Bag contains \'%c\' in both compartments", itemChar);
+						sharedItemsStr.chars[sharedItemsStr.length] = itemChar;
+						sharedItemsStr.length++;
+						result += Aoc2022_03_GetItemPriority(itemChar);
 					}
 				}
 			}
 		}
 	}
 	AocCloseFile(file);
+	Assert(numBagsInGroup == 0);
+	if (doSolutionB) { PrintLine_D("There were %llu groups of 3", numGroups); }
+	PrintLine_D("Total priority aggregate is %llu", result);
 	
 	AocReturnU64(result);
 }

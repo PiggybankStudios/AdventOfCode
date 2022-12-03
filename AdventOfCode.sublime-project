@@ -3304,6 +3304,8 @@
 			"u64 AnimateAndPauseByU64(u64 timeSource, u64 min, u64 max, u64 animationTime, u64 pauseTime, u64 offset = 0, bool useFirstFrameForPause = false)",
 			"u64 AnimateByU64(u64 timeSource, u64 min, u64 max, u64 periodMs, u64 offset = 0)",
 			"u64 AnimateU64(u64 min, u64 max, u64 periodMs, u64 offset = 0)",
+			"u64 Aoc2022_03_GetItemPriority(char item)",
+			"u64 Aoc2022_03_IsItemCharInStr(MyStr_t bagStr, char itemChar)",
 			"u64 AocFindMaxU64(VarArray_t* arrayPntr, u64* foundIndexOut = nullptr)",
 			"u64 Deser_FindPartsBurstByName(const VarArray_t* burstsArray, MyStr_t name)",
 			"u64 Deser_FindPartsPrefabByName(const VarArray_t* prefabsArray, MyStr_t name)",
