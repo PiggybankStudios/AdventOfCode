@@ -158,8 +158,8 @@ MyStr_t AocSolutionFunc_2021_03(AocSolutionStruct_2021_03_t* data, bool doSoluti
 		
 		for (u64 bIndex = 0; bIndex < numBits; bIndex++)
 		{
-			PrintLine_I("There are now %llu/%llu 1's in column[%llu] for oxygen", oxygenBitOneCounts[bIndex], oxygenCandidateStrs.length, bIndex);
-			PrintLine_I("There are now %llu/%llu 1's in column[%llu] for CO2", co2BitOneCounts[bIndex], co2CandidateStrs.length, bIndex);
+			// PrintLine_I("There are now %llu/%llu 1's in column[%llu] for oxygen", oxygenBitOneCounts[bIndex], oxygenCandidateStrs.length, bIndex);
+			// PrintLine_I("There are now %llu/%llu 1's in column[%llu] for CO2", co2BitOneCounts[bIndex], co2CandidateStrs.length, bIndex);
 			char oxygenExpectedChar = ((oxygenBitOneCounts[bIndex] >= (oxygenCandidateStrs.length - oxygenBitOneCounts[bIndex])) ? '1' : '0');
 			char co2ExpectedChar = ((co2BitOneCounts[bIndex] >= (co2CandidateStrs.length - co2BitOneCounts[bIndex])) ? '0' : '1');
 			if (oxygenCandidateStrs.length > 1)

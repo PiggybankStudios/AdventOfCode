@@ -318,8 +318,65 @@ MyStr_t AocSolutionFunc_2022_03(AocSolutionStruct_2022_03_t* data, bool doSoluti
 // +==============================+
 MyStr_t AocSolutionFunc_2022_04(AocSolutionStruct_2022_04_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_04 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_04.txt");
+	// AocOpenFile(file, "input_2022_04_ex.txt");
+	
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		u64 commaIndex = 0;
+		bool foundComma = FindSubstring(line, ",", &commaIndex);
+		Assert(foundComma);
+		MyStr_t firstHalfLine = StrSubstring(&line, 0, commaIndex);
+		MyStr_t secondHalfLine = StrSubstring(&line, commaIndex+1);
+		// PrintLine_D("commaIndex = %llu \"%.*s\" \"%.*s\"", commaIndex, firstHalfLine.length, firstHalfLine.pntr, secondHalfLine.length, secondHalfLine.pntr);
+		
+		u64 firstHyphenIndex = 0;
+		bool foundFirstHyphen = FindSubstring(firstHalfLine, "-", &firstHyphenIndex);
+		Assert(foundFirstHyphen);
+		u64 secondHyphenIndex = 0;
+		bool foundSecondHyphen = FindSubstring(secondHalfLine, "-", &secondHyphenIndex);
+		Assert(foundSecondHyphen);
+		MyStr_t numberStrs[4];
+		numberStrs[0] = StrSubstring(&firstHalfLine, 0, firstHyphenIndex);
+		numberStrs[1] = StrSubstring(&firstHalfLine, firstHyphenIndex+1);
+		numberStrs[2] = StrSubstring(&secondHalfLine, 0, secondHyphenIndex);
+		numberStrs[3] = StrSubstring(&secondHalfLine, secondHyphenIndex+1);
+		// PrintLine_D("\"%.*s\" \"%.*s\" \"%.*s\" \"%.*s\"",
+		// 	numberStrs[0].length, numberStrs[0].pntr,
+		// 	numberStrs[1].length, numberStrs[1].pntr,
+		// 	numberStrs[2].length, numberStrs[2].pntr,
+		// 	numberStrs[3].length, numberStrs[3].pntr
+		// );
+		
+		u64 min1, max1, min2, max2;
+		bool parseNum1 = TryParseU64(numberStrs[0], &min1); Assert(parseNum1);
+		bool parseNum2 = TryParseU64(numberStrs[1], &max1); Assert(parseNum2);
+		bool parseNum3 = TryParseU64(numberStrs[2], &min2); Assert(parseNum3);
+		bool parseNum4 = TryParseU64(numberStrs[3], &max2); Assert(parseNum4);
+		// PrintLine_D("%llu, %llu, %llu, %llu", numbers[0], numbers[1], numbers[2], numbers[3]);
+		
+		if (doSolutionB)
+		{
+			if ((max1 >= min2 && min1 <= max2))
+			{
+				PrintLine_D("Overlapping! (%llu-%llu, %llu-%llu)", min1, max1, min2, max2);
+				result++;
+			}
+		}
+		else
+		{
+			if ((min1 >= min2 && max1 <= max2) ||
+				(min2 >= min1 && max2 <= max1))
+			{
+				PrintLine_D("Fully contained! (%llu-%llu, %llu-%llu)", min1, max1, min2, max2);
+				result++;
+			}
+		}
+	}
+	AocCloseFile(file);
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
