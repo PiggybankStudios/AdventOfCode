@@ -2576,6 +2576,7 @@
 			"bool IsPostMeridian(u16 twentyFourHourValue)",
 			"bool IsResourcePinned(ResourceType_t type, u64 resourceIndex)",
 			"bool IsResourceReady(const void* resourcePntr)",
+			"bool IsSequenceAllUnique(u64 numChars, char* charPntr)",
 			"bool IsSingleDir2(Dir2_t dir2, bool allowNone = false)",
 			"bool IsSingleDir2Ex(Dir2Ex_t dir2ex, bool allowNone = false)",
 			"bool IsSingleDir3(Dir3_t dir3, bool allowNone = false)",

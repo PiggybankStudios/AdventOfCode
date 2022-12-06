@@ -521,10 +521,55 @@ MyStr_t AocSolutionFunc_2022_05(AocSolutionStruct_2022_05_t* data, bool doSoluti
 // +==============================+
 // |            Day 06            |
 // +==============================+
+bool IsSequenceAllUnique(u64 numChars, char* charPntr)
+{
+	for (u64 cIndex = 0; cIndex < numChars; cIndex++)
+	{
+		for (u64 cIndex2 = cIndex+1; cIndex2 < numChars; cIndex2++)
+		{
+			if (charPntr[cIndex] == charPntr[cIndex2]) { return false; }
+		}
+	}
+	return true;
+}
 MyStr_t AocSolutionFunc_2022_06(AocSolutionStruct_2022_06_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_06 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_06.txt");
+	// AocOpenFile(file, "input_2022_06_ex.txt");
+	
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		for (u64 cIndex = 0; cIndex+(doSolutionB ? 14 : 4) <= line.length; cIndex++)
+		{
+			if (doSolutionB)
+			{
+				if (IsSequenceAllUnique(14, line.chars + cIndex))
+				{
+					PrintLine_D("Start of message at %llu \"%.*s\"", cIndex, 14, &line.chars[cIndex]);
+					result = cIndex+14;
+					break;
+				}
+			}
+			else
+			{
+				if (line.chars[cIndex+0] != line.chars[cIndex+1] &&
+					line.chars[cIndex+1] != line.chars[cIndex+2] &&
+					line.chars[cIndex+2] != line.chars[cIndex+3] &&
+					line.chars[cIndex+0] != line.chars[cIndex+2] &&
+					line.chars[cIndex+1] != line.chars[cIndex+3] &&
+					line.chars[cIndex+0] != line.chars[cIndex+3])
+				{
+					PrintLine_D("Start of sequence at %llu \"%.*s\"", cIndex, 4, &line.chars[cIndex]);
+					result = cIndex+4;
+					break;
+				}
+			}
+		}
+	}
+	AocCloseFile(file);
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
