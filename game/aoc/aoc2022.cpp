@@ -384,8 +384,138 @@ MyStr_t AocSolutionFunc_2022_04(AocSolutionStruct_2022_04_t* data, bool doSoluti
 // +==============================+
 MyStr_t AocSolutionFunc_2022_05(AocSolutionStruct_2022_05_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_05 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_05.txt");
+	// AocOpenFile(file, "input_2022_05_ex.txt");
+	
+	#define MAX_NUM_STACKS   10
+	#define MAX_STACK_HEIGHT 64
+	u64 totalNumCrates = 0;
+	u64 maxStackHeight = 0;
+	u64 numStacks = 0;
+	char stacks[MAX_NUM_STACKS][MAX_STACK_HEIGHT];
+	u64 stackHeights[MAX_NUM_STACKS];
+	bool foundEndOfStacks = false;
+	MyMemSet(stacks, 0x00, sizeof(char) * MAX_NUM_STACKS * MAX_STACK_HEIGHT);
+	u64 numMoves = 0;
+	
+	AocLoopFile(file, parser, line)
+	{
+		MyStr_t trimmedLine = line;
+		TrimWhitespace(&trimmedLine);
+		if (!foundEndOfStacks)
+		{
+			if (StrStartsWith(line, " 1"))
+			{
+				PrintLine_D("There are %llu stacks with a max height of %llu", numStacks, maxStackHeight);
+				
+				//Count how high each stack is
+				for (u64 sIndex = 0; sIndex < numStacks; sIndex++)
+				{
+					stackHeights[sIndex] = 0;
+					for (u64 hIndex = 0; hIndex < maxStackHeight; hIndex++)
+					{
+						if (stacks[sIndex][maxStackHeight-1 - hIndex] != '\0') { stackHeights[sIndex]++; }
+						else { break; }
+					}
+				}
+				
+				//Reverse the order of each stack in memory so we can stack higher than maxStackHeight
+				for (u64 sIndex = 0; sIndex < numStacks; sIndex++)
+				{
+					for (u64 hIndex = 0; hIndex < maxStackHeight/2; hIndex++)
+					{
+						SWAP_VARIABLES(char, stacks[sIndex][hIndex], stacks[sIndex][maxStackHeight-1 - hIndex]);
+					}
+				}
+				
+				PrintLine_D("There are %llu crates total in %llu stacks:", totalNumCrates, numStacks);
+				for (u64 sIndex = 0; sIndex < numStacks; sIndex++)
+				{
+					Print_D("[%llu]: ", stackHeights[sIndex]);
+					for (u64 hIndex = 0; hIndex < stackHeights[sIndex]; hIndex++)
+					{
+						Print_D("%s%c", (hIndex > 0) ? ", " : "", stacks[sIndex][hIndex]);
+					}
+					WriteLine_D("");
+				}
+				foundEndOfStacks = true;
+			}
+			else
+			{
+				Assert(maxStackHeight+1 < MAX_STACK_HEIGHT);
+				for (u64 cIndex = 0; cIndex < line.length; cIndex++)
+				{
+					char c = line.chars[cIndex];
+					if (c == '[' || c == ']' || c == ' ') { continue; }
+					Assert((cIndex-1) % 4 == 0);
+					u64 column = ((cIndex-1) / 4);
+					stacks[column][maxStackHeight] = c;
+					totalNumCrates++;
+					if (numStacks < column+1) { numStacks = column+1; }
+				}
+				maxStackHeight++;
+			}
+		}
+		else if (!IsEmptyStr(trimmedLine))
+		{
+			u64 numLinePieces = 0;
+			MyStr_t* linePieces = SplitString(TempArena, trimmedLine, " ", &numLinePieces);
+			Assert(numLinePieces == 6);
+			u64 numBoxesToMove = 0; bool parsedNumBoxesToMove = TryParseU64(linePieces[1], &numBoxesToMove); Assert(parsedNumBoxesToMove);
+			u64 fromStackIndex = 0; bool parsedFromStackIndex = TryParseU64(linePieces[3], &fromStackIndex); Assert(parsedFromStackIndex);
+			u64 toStackIndex   = 0; bool parsedToStackIndex   = TryParseU64(linePieces[5], &toStackIndex);   Assert(parsedToStackIndex);
+			fromStackIndex--;
+			toStackIndex--;
+			// PrintLine_D("Moving %llu boxes from stack[%llu] to stack[%llu]", numBoxesToMove, fromStackIndex, toStackIndex);
+			numMoves++;
+			
+			Assert(fromStackIndex != toStackIndex);
+			Assert(fromStackIndex < numStacks);
+			Assert(toStackIndex < numStacks);
+			Assert(numBoxesToMove <= stackHeights[fromStackIndex]);
+			Assert(stackHeights[toStackIndex] + numBoxesToMove <= MAX_STACK_HEIGHT);
+			if (doSolutionB)
+			{
+				for (u64 mIndex = 0; mIndex < numBoxesToMove; mIndex++)
+				{
+					char crate = stacks[fromStackIndex][(stackHeights[fromStackIndex] - numBoxesToMove) + mIndex];
+					stacks[toStackIndex][stackHeights[toStackIndex] + mIndex] = crate;
+				}
+				stackHeights[fromStackIndex] -= numBoxesToMove;
+				stackHeights[toStackIndex] += numBoxesToMove;
+			}
+			else
+			{
+				for (u64 mIndex = 0; mIndex < numBoxesToMove; mIndex++)
+				{
+					char crate = stacks[fromStackIndex][stackHeights[fromStackIndex]-1];
+					stackHeights[fromStackIndex]--;
+					stacks[toStackIndex][stackHeights[toStackIndex]] = crate;
+					stackHeights[toStackIndex]++;
+				}
+			}
+		}
+	}
+	AocCloseFile(file);
+	
+	PrintLine_D("End Result after %llu moves:", numMoves);
+	for (u64 sIndex = 0; sIndex < numStacks; sIndex++)
+	{
+		Print_D("[%llu]: ", stackHeights[sIndex]);
+		for (u64 hIndex = 0; hIndex < stackHeights[sIndex]; hIndex++)
+		{
+			Print_D("%s%c", (hIndex > 0) ? ", " : "", stacks[sIndex][hIndex]);
+		}
+		WriteLine_D("");
+	}
+	
+	char* resultBuffer = TempArray(char, numStacks+1);
+	for (u64 sIndex = 0; sIndex < numStacks; sIndex++)
+	{
+		resultBuffer[sIndex] = stacks[sIndex][stackHeights[sIndex]-1];
+	}
+	resultBuffer[numStacks] = '\0';
+	return NewStr(resultBuffer);
 }
 
 // +==============================+
