@@ -540,30 +540,14 @@ MyStr_t AocSolutionFunc_2022_06(AocSolutionStruct_2022_06_t* data, bool doSoluti
 	u64 result = 0;
 	AocLoopFile(file, parser, line)
 	{
-		for (u64 cIndex = 0; cIndex+(doSolutionB ? 14 : 4) <= line.length; cIndex++)
+		u64 markerLength = (doSolutionB ? 14 : 4);
+		for (u64 cIndex = 0; cIndex+markerLength <= line.length; cIndex++)
 		{
-			if (doSolutionB)
+			if (IsSequenceAllUnique(markerLength, line.chars + cIndex))
 			{
-				if (IsSequenceAllUnique(14, line.chars + cIndex))
-				{
-					PrintLine_D("Start of message at %llu \"%.*s\"", cIndex, 14, &line.chars[cIndex]);
-					result = cIndex+14;
-					break;
-				}
-			}
-			else
-			{
-				if (line.chars[cIndex+0] != line.chars[cIndex+1] &&
-					line.chars[cIndex+1] != line.chars[cIndex+2] &&
-					line.chars[cIndex+2] != line.chars[cIndex+3] &&
-					line.chars[cIndex+0] != line.chars[cIndex+2] &&
-					line.chars[cIndex+1] != line.chars[cIndex+3] &&
-					line.chars[cIndex+0] != line.chars[cIndex+3])
-				{
-					PrintLine_D("Start of sequence at %llu \"%.*s\"", cIndex, 4, &line.chars[cIndex]);
-					result = cIndex+4;
-					break;
-				}
+				PrintLine_D("Start of %s at %llu/%llu \"%.*s\"", (doSolutionB ? "Message" : "Sequence"), cIndex, line.length, markerLength, &line.chars[cIndex]);
+				result = cIndex + markerLength;
+				break;
 			}
 		}
 	}
@@ -575,10 +559,178 @@ MyStr_t AocSolutionFunc_2022_06(AocSolutionStruct_2022_06_t* data, bool doSoluti
 // +==============================+
 // |            Day 07            |
 // +==============================+
+enum Command_t
+{
+	Command_Cd = 0,
+	Command_Ls,
+	Command_Dir,
+	Command_NumCommands,
+};
+const char* GetCommandStr(Command_t enumValue)
+{
+	switch (enumValue)
+	{
+		case Command_Cd:  return "Cd";
+		case Command_Ls:  return "Ls";
+		case Command_Dir: return "Dir";
+		default: return "Unknown";
+	}
+}
+struct Directory_t
+{
+	MyStr_t name;
+	VarArray_t children;
+	u64 contentsSize;
+};
+Directory_t* GetDirectory(Directory_t* root, MyStr_t path)
+{
+	TempPushMark();
+	if (StrStartsWith(path, "/")) { path.pntr++; path.length--; }
+	u64 numPieces = 0;
+	MyStr_t* pieces = SplitString(TempArena, path, "/", &numPieces);
+	Directory_t* dir = root;
+	for (u64 pIndex = 0; pIndex < numPieces; pIndex++)
+	{
+		if (IsEmptyStr(pieces[pIndex])) { continue; }
+		
+		bool foundDir = false;
+		for (u64 cIndex = 0; cIndex < dir->children.length; cIndex++)
+		{
+			Directory_t* child = VarArrayGet(&dir->children, cIndex, Directory_t);
+			if (StrEqualsIgnoreCase(child->name, pieces[pIndex]))
+			{
+				dir = child;
+				foundDir = true;
+				break;
+			}
+		}
+		
+		if (!foundDir)
+		{
+			if (pieces[pIndex].length == 1) { MyDebugBreak(); }
+			
+			PrintLine_D("Creating \"%.*s\" in \"%.*s\" for \"%.*s\"",
+				pieces[pIndex].length, pieces[pIndex].pntr,
+				dir->name.length, dir->name.pntr,
+				path.length, path.pntr
+			);
+			Directory_t* newDir = VarArrayAdd(&dir->children, Directory_t);
+			ClearPointer(newDir);
+			newDir->name = AllocString(aocArena, &pieces[pIndex]);
+			CreateVarArray(&newDir->children, aocArena, sizeof(Directory_t));
+			newDir->contentsSize = 0;
+			dir = newDir;
+		}
+	}
+	TempPopMark();
+	return dir;
+}
+Command_t GetCommand(MyStr_t str)
+{
+	for (u64 eIndex = 0; eIndex < Command_NumCommands; eIndex++)
+	{
+		if (StrEqualsIgnoreCase(NewStr(GetCommandStr((Command_t)eIndex)), str))
+		{
+			return (Command_t)eIndex;
+		}
+	}
+	return Command_NumCommands;
+}
+#define NEEDED_SPACE 8381165
+u64 WalkDirectories(Directory_t* base, MyStr_t basePath, u64* resultOut, bool doSolutionB)
+{
+	MyStr_t path = TempPrintStr("%.*s%.*s%s", basePath.length, basePath.pntr, base->name.length, base->name.pntr, (basePath.length == 0 ? "" : "/"));
+	PrintLine_D("Walking \"%.*s\" (%llu)", path.length, path.pntr, base->contentsSize);
+	u64 dirSize = base->contentsSize;
+	VarArrayLoop(&base->children, cIndex)
+	{
+		VarArrayLoopGet(Directory_t, child, &base->children, cIndex);
+		dirSize += WalkDirectories(child, path, resultOut, doSolutionB);
+	}
+	if (doSolutionB)
+	{
+		if (dirSize >= NEEDED_SPACE && (*resultOut == 0 || dirSize < *resultOut))
+		{
+			*resultOut = dirSize;
+		}
+	}
+	else
+	{
+		if (dirSize <= 100000)
+		{
+			*resultOut = *resultOut + dirSize;
+			PrintLine_D("Adding \"%.*s\" %llu", base->name.length, base->name.pntr, base->contentsSize);
+		}
+	}
+	return dirSize;
+}
 MyStr_t AocSolutionFunc_2022_07(AocSolutionStruct_2022_07_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_07 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_07.txt");
+	// AocOpenFile(file, "input_2022_07_ex.txt");
+	
+	MyStr_t currentDirStr = MyStr_Empty;
+	u64 currentDirSize = 0;
+	
+	Directory_t parentDir = {};
+	CreateVarArray(&parentDir.children, aocArena, sizeof(Directory_t));
+	parentDir.name = NewStr("/");
+	Directory_t* currentDir = &parentDir;
+	
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		TempPushMark();
+		u64 numPieces = 0;
+		MyStr_t* pieces = SplitString(TempArena, line, NewStr(" "), &numPieces);
+		if (StrEquals(pieces[0], "$"))
+		{
+			PrintLine_D("Executing \"%.*s\"", line.length, line.pntr);
+			Command_t command = GetCommand(pieces[1]);
+			if (command == Command_Cd)
+			{
+				if (StrEqualsIgnoreCase(pieces[2], ".."))
+				{
+					u64 lastIndexOfSlash = currentDirStr.length;
+					for (u64 cIndex = 0; cIndex < currentDirStr.length; cIndex++)
+					{
+						if (currentDirStr.chars[cIndex] == '/') { lastIndexOfSlash = cIndex; }
+					}
+					currentDirStr = StrSubstring(&currentDirStr, 0, lastIndexOfSlash);
+				}
+				else if (StrEqualsIgnoreCase(pieces[2], "/"))
+				{
+					currentDirStr = AllocString(aocArena, &pieces[2]);
+				}
+				else
+				{
+					currentDirStr = PrintInArenaStr(aocArena, "%.*s%.*s/", currentDirStr.length, currentDirStr.pntr, pieces[2].length, pieces[2].pntr);
+				}
+				
+				// PrintLine_D("In \"%.*s\"", currentDirStr.length, currentDirStr.pntr);
+				currentDir = GetDirectory(&parentDir, currentDirStr);
+			}
+			else if (command == Command_Ls)
+			{
+				//do nothing
+			}
+		}
+		else
+		{
+			u64 fileSize = 0;
+			bool parsed = TryParseU64(pieces[0], &fileSize);
+			if (parsed)
+			{
+				currentDir->contentsSize += fileSize;
+			}
+		}
+		TempPopMark();
+	}
+	AocCloseFile(file);
+	
+	WalkDirectories(&parentDir, MyStr_Empty, &result, doSolutionB);
+	
+	AocReturnU64(result);
 }
 
 // +==============================+

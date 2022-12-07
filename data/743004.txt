@@ -1,0 +1,484 @@
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd nsnfq"
+[  aoc2022.cpp: 614]: Creating "gnsnfq" in "/" for "gnsnfq/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd tgdqz"
+[  aoc2022.cpp: 614]: Creating "tgdqz" in "gnsnfq" for "gnsnfq/tgdqz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd ggb"
+[  aoc2022.cpp: 614]: Creating "ggb" in "tgdqz" for "gnsnfq/tgdqz/ggb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd rhgmnqz"
+[  aoc2022.cpp: 614]: Creating "rhgmnqz" in "ggb" for "gnsnfq/tgdqz/ggb/rhgmnqz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd rggzmfqm"
+[  aoc2022.cpp: 614]: Creating "grggzmfqm" in "/" for "grggzmfqm/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd wjdnwg"
+[  aoc2022.cpp: 614]: Creating "gwjdnwg" in "/" for "gwjdnwg/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd sqh"
+[  aoc2022.cpp: 614]: Creating "sqh" in "gwjdnwg" for "gwjdnwg/sqh/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd zgfz"
+[  aoc2022.cpp: 614]: Creating "gzgfz" in "/" for "gzgfz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd pllr"
+[  aoc2022.cpp: 614]: Creating "pllr" in "gpjmc" for "gpjmc/pllr/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd fshjdzp"
+[  aoc2022.cpp: 614]: Creating "fshjdzp" in "pllr" for "gpjmc/pllr/fshjdzp/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd rfbdg"
+[  aoc2022.cpp: 614]: Creating "grfbdg" in "/" for "grfbdg/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd rzzwcb"
+[  aoc2022.cpp: 614]: Creating "grzzwcb" in "/" for "grzzwcb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd rhgmnqz"
+[  aoc2022.cpp: 614]: Creating "rhgmnqz" in "grzzwcb" for "grzzwcb/rhgmnqz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd zzcw"
+[  aoc2022.cpp: 614]: Creating "gzzcw" in "/" for "gzzcw/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd tqqjp"
+[  aoc2022.cpp: 614]: Creating "gtqqjp" in "/" for "gtqqjp/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd tjlf"
+[  aoc2022.cpp: 614]: Creating "gtjlf" in "/" for "gtjlf/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 614]: Creating "pjmc" in "gtjlf" for "gtjlf/pjmc/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd fgvv"
+[  aoc2022.cpp: 614]: Creating "fgvv" in "gpjmc" for "gpjmc/fgvv/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd ggb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd hfcr"
+[  aoc2022.cpp: 614]: Creating "hfcr" in "gggb" for "gggb/hfcr/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd mjrhdq"
+[  aoc2022.cpp: 614]: Creating "mjrhdq" in "hfcr" for "gggb/hfcr/mjrhdq/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd qwvfg"
+[  aoc2022.cpp: 614]: Creating "gqwvfg" in "/" for "gqwvfg/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sgpnzv"
+[  aoc2022.cpp: 614]: Creating "gsgpnzv" in "/" for "gsgpnzv/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd nwbndtgl"
+[  aoc2022.cpp: 614]: Creating "gnwbndtgl" in "/" for "gnwbndtgl/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd fsdvzvvv"
+[  aoc2022.cpp: 614]: Creating "fsdvzvvv" in "gnwbndtgl" for "gnwbndtgl/fsdvzvvv/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd llwbm"
+[  aoc2022.cpp: 614]: Creating "llwbm" in "fsdvzvvv" for "gnwbndtgl/fsdvzvvv/llwbm/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd qrrs"
+[  aoc2022.cpp: 614]: Creating "qrrs" in "llwbm" for "gnwbndtgl/fsdvzvvv/llwbm/qrrs/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd lzz"
+[  aoc2022.cpp: 614]: Creating "glzz" in "/" for "glzz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd tnmwncgl"
+[  aoc2022.cpp: 614]: Creating "tnmwncgl" in "glzz" for "glzz/tnmwncgl/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd wrjjmhz"
+[  aoc2022.cpp: 614]: Creating "gwrjjmhz" in "/" for "gwrjjmhz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd rgb"
+[  aoc2022.cpp: 614]: Creating "grgb" in "/" for "grgb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd bvwn"
+[  aoc2022.cpp: 614]: Creating "bvwn" in "grgb" for "grgb/bvwn/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd cfbfmprt"
+[  aoc2022.cpp: 614]: Creating "cfbfmprt" in "bvwn" for "grgb/bvwn/cfbfmprt/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd vndbzj"
+[  aoc2022.cpp: 614]: Creating "vndbzj" in "cfbfmprt" for "grgb/bvwn/cfbfmprt/vndbzj/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd cfbfmprt"
+[  aoc2022.cpp: 614]: Creating "cfbfmprt" in "vndbzj" for "grgb/bvwn/cfbfmprt/vndbzj/cfbfmprt/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd ptzpcqh"
+[  aoc2022.cpp: 614]: Creating "ptzpcqh" in "cfbfmprt" for "grgb/bvwn/cfbfmprt/vndbzj/cfbfmprt/ptzpcqh/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd fjmbvhh"
+[  aoc2022.cpp: 614]: Creating "gfjmbvhh" in "/" for "gfjmbvhh/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd ggb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pdgsf"
+[  aoc2022.cpp: 614]: Creating "gpdgsf" in "/" for "gpdgsf/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd fjdlhn"
+[  aoc2022.cpp: 614]: Creating "fjdlhn" in "gpdgsf" for "gpdgsf/fjdlhn/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd rhgmnqz"
+[  aoc2022.cpp: 614]: Creating "rhgmnqz" in "fjdlhn" for "gpdgsf/fjdlhn/rhgmnqz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd pdlpwdp"
+[  aoc2022.cpp: 614]: Creating "gpdlpwdp" in "/" for "gpdlpwdp/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd fwsbsprp"
+[  aoc2022.cpp: 614]: Creating "fwsbsprp" in "gpdlpwdp" for "gpdlpwdp/fwsbsprp/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd gjjjwznz"
+[  aoc2022.cpp: 614]: Creating "ggjjjwznz" in "/" for "ggjjjwznz/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd jzpwnpmc"
+[  aoc2022.cpp: 614]: Creating "gjzpwnpmc" in "/" for "gjzpwnpmc/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd cfbfmprt"
+[  aoc2022.cpp: 614]: Creating "cfbfmprt" in "gjzpwnpmc" for "gjzpwnpmc/cfbfmprt/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd slj"
+[  aoc2022.cpp: 614]: Creating "slj" in "cfbfmprt" for "gjzpwnpmc/cfbfmprt/slj/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd gpd"
+[  aoc2022.cpp: 614]: Creating "ggpd" in "/" for "ggpd/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd qlvfslzp"
+[  aoc2022.cpp: 614]: Creating "gqlvfslzp" in "/" for "gqlvfslzp/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd clnms"
+[  aoc2022.cpp: 614]: Creating "clnms" in "gqlvfslzp" for "gqlvfslzp/clnms/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd ggb"
+[  aoc2022.cpp: 614]: Creating "ggb" in "clnms" for "gqlvfslzp/clnms/ggb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sqhbbsbj"
+[  aoc2022.cpp: 614]: Creating "gsqhbbsbj" in "/" for "gsqhbbsbj/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd cfbfmprt"
+[  aoc2022.cpp: 614]: Creating "cfbfmprt" in "gsdpjprfb" for "gsdpjprfb/cfbfmprt/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd ggb"
+[  aoc2022.cpp: 614]: Creating "ggb" in "cfbfmprt" for "gsdpjprfb/cfbfmprt/ggb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd qnqcb"
+[  aoc2022.cpp: 614]: Creating "qnqcb" in "ggb" for "gsdpjprfb/cfbfmprt/ggb/qnqcb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd qnhl"
+[  aoc2022.cpp: 614]: Creating "gqnhl" in "/" for "gqnhl/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd sdpjprfb"
+[  aoc2022.cpp: 614]: Creating "sdpjprfb" in "gqnhl" for "gqnhl/sdpjprfb/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd sbps"
+[  aoc2022.cpp: 614]: Creating "gsbps" in "/" for "gsbps/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd pjmc"
+[  aoc2022.cpp: 614]: Creating "pjmc" in "gsbps" for "gsbps/pjmc/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd .."
+[  aoc2022.cpp: 675]: Executing "$ cd wvdlv"
+[  aoc2022.cpp: 614]: Creating "gwvdlv" in "/" for "gwvdlv/"
+[  aoc2022.cpp: 675]: Executing "$ ls"
+[  aoc2022.cpp: 640]: Walking "/" (943624)
+[  aoc2022.cpp: 640]: Walking "/gwnwqcgq/" (479713)
+[  aoc2022.cpp: 640]: Walking "/gwnwqcgq/btddw/" (414688)
+[  aoc2022.cpp: 640]: Walking "/gwnwqcgq/btddw/pjmc/" (887950)
+[  aoc2022.cpp: 640]: Walking "/gwnwqcgq/btddw/pjmc/hml/" (807201)
+[  aoc2022.cpp: 640]: Walking "/gwnwqcgq/btddw/pjmc/hml/fjtwgcw/" (584754)
+[  aoc2022.cpp: 640]: Walking "/g/" (0)
+[  aoc2022.cpp: 650]: Adding "g" 0
+[  aoc2022.cpp: 640]: Walking "/gmzthvdms/" (596456)
+[  aoc2022.cpp: 640]: Walking "/gtnvsdr/" (271476)
+[  aoc2022.cpp: 640]: Walking "/gvplhff/" (0)
+[  aoc2022.cpp: 640]: Walking "/gvplhff/trjdm/" (244921)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/" (761117)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/htvgnrrl/" (240529)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/cgczvvbg/" (328955)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/cgczvvbg/bntjhfd/" (217858)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/cfbfmprt/" (0)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/cfbfmprt/ggb/" (158203)
+[  aoc2022.cpp: 640]: Walking "/gsdpjprfb/cfbfmprt/ggb/qnqcb/" (71245)
+[  aoc2022.cpp: 650]: Adding "qnqcb" 71245
+[  aoc2022.cpp: 640]: Walking "/gwnmh/" (506723)
+[  aoc2022.cpp: 640]: Walking "/gwnmh/gccwr/" (290656)
+[  aoc2022.cpp: 640]: Walking "/grlhn/" (208348)
+[  aoc2022.cpp: 640]: Walking "/gzqcnhs/" (16392)
+[  aoc2022.cpp: 640]: Walking "/gzqcnhs/dtfrbzgn/" (513030)
+[  aoc2022.cpp: 640]: Walking "/gzqcnhs/dtfrbzgn/ghbwbc/" (0)
+[  aoc2022.cpp: 640]: Walking "/gzqcnhs/dtfrbzgn/ghbwbc/zgvwrms/" (296919)
+[  aoc2022.cpp: 640]: Walking "/gphhdmp/" (0)
+[  aoc2022.cpp: 640]: Walking "/gphhdmp/ggb/" (513265)
+[  aoc2022.cpp: 640]: Walking "/gggb/" (1896225)
+[  aoc2022.cpp: 640]: Walking "/gggb/fdmst/" (20042)
+[  aoc2022.cpp: 640]: Walking "/gggb/fdmst/gcq/" (132662)
+[  aoc2022.cpp: 640]: Walking "/gggb/jtpb/" (249820)
+[  aoc2022.cpp: 640]: Walking "/gggb/jtpb/dggzszwn/" (233228)
+[  aoc2022.cpp: 640]: Walking "/gggb/tcrjcmq/" (36677)
+[  aoc2022.cpp: 650]: Adding "tcrjcmq" 36677
+[  aoc2022.cpp: 640]: Walking "/gggb/sdpjprfb/" (0)
+[  aoc2022.cpp: 640]: Walking "/gggb/sdpjprfb/jwjpwbdj/" (88782)
+[  aoc2022.cpp: 650]: Adding "jwjpwbdj" 88782
+[  aoc2022.cpp: 650]: Adding "sdpjprfb" 0
+[  aoc2022.cpp: 640]: Walking "/gggb/ggb/" (545402)
+[  aoc2022.cpp: 640]: Walking "/gggb/hfcr/" (318041)
+[  aoc2022.cpp: 640]: Walking "/gggb/hfcr/mjrhdq/" (266382)
+[  aoc2022.cpp: 640]: Walking "/gnnp/" (246822)
+[  aoc2022.cpp: 640]: Walking "/gpjmc/" (2201698)
+[  aoc2022.cpp: 640]: Walking "/gpjmc/pllr/" (430015)
+[  aoc2022.cpp: 640]: Walking "/gpjmc/pllr/fshjdzp/" (143719)
+[  aoc2022.cpp: 640]: Walking "/gpjmc/fgvv/" (539870)
+[  aoc2022.cpp: 640]: Walking "/gqng/" (333275)
+[  aoc2022.cpp: 640]: Walking "/gpdwln/" (0)
+[  aoc2022.cpp: 640]: Walking "/gpdwln/sdpjprfb/" (285618)
+[  aoc2022.cpp: 640]: Walking "/ghhdfbj/" (2937)
+[  aoc2022.cpp: 650]: Adding "ghhdfbj" 2937
+[  aoc2022.cpp: 640]: Walking "/ghrj/" (678518)
+[  aoc2022.cpp: 640]: Walking "/ghrj/dfdtszr/" (0)
+[  aoc2022.cpp: 640]: Walking "/ghrj/dfdtszr/hfmnrlvj/" (237362)
+[  aoc2022.cpp: 640]: Walking "/gplzr/" (295398)
+[  aoc2022.cpp: 640]: Walking "/gzpspcph/" (87660)
+[  aoc2022.cpp: 650]: Adding "gzpspcph" 87660
+[  aoc2022.cpp: 640]: Walking "/gwhms/" (0)
+[  aoc2022.cpp: 640]: Walking "/gwhms/ggb/" (0)
+[  aoc2022.cpp: 640]: Walking "/gwhms/ggb/sdpjprfb/" (177878)
+[  aoc2022.cpp: 640]: Walking "/gvtgcdprq/" (293766)
+[  aoc2022.cpp: 640]: Walking "/grsptqbh/" (479874)
+[  aoc2022.cpp: 640]: Walking "/grsptqbh/csvpjd/" (218253)
+[  aoc2022.cpp: 640]: Walking "/gzjvc/" (98002)
+[  aoc2022.cpp: 650]: Adding "gzjvc" 98002
+[  aoc2022.cpp: 640]: Walking "/gnssjjtp/" (63947)
+[  aoc2022.cpp: 650]: Adding "gnssjjtp" 63947
+[  aoc2022.cpp: 640]: Walking "/grchlvjb/" (308502)
+[  aoc2022.cpp: 640]: Walking "/gvfrrnf/" (3071)
+[  aoc2022.cpp: 650]: Adding "gvfrrnf" 3071
+[  aoc2022.cpp: 640]: Walking "/gqdqdv/" (26265)
+[  aoc2022.cpp: 650]: Adding "gqdqdv" 26265
+[  aoc2022.cpp: 640]: Walking "/gvqhps/" (1076382)
+[  aoc2022.cpp: 640]: Walking "/gvqhps/njstt/" (424303)
+[  aoc2022.cpp: 640]: Walking "/grbhd/" (804778)
+[  aoc2022.cpp: 640]: Walking "/grbhd/gchzg/" (0)
+[  aoc2022.cpp: 640]: Walking "/grbhd/gchzg/phnz/" (212607)
+[  aoc2022.cpp: 640]: Walking "/gqmsntzj/" (87958)
+[  aoc2022.cpp: 650]: Adding "gqmsntzj" 87958
+[  aoc2022.cpp: 640]: Walking "/gvsg/" (232499)
+[  aoc2022.cpp: 640]: Walking "/gwbqshdm/" (0)
+[  aoc2022.cpp: 640]: Walking "/gwbqshdm/pjmc/" (273630)
+[  aoc2022.cpp: 640]: Walking "/gtmdtrqsl/" (139366)
+[  aoc2022.cpp: 640]: Walking "/gmdhln/" (0)
+[  aoc2022.cpp: 640]: Walking "/gmdhln/bftszdgn/" (794052)
+[  aoc2022.cpp: 640]: Walking "/gmdhln/bftszdgn/ggb/" (794097)
+[  aoc2022.cpp: 640]: Walking "/gnddh/" (243243)
+[  aoc2022.cpp: 640]: Walking "/gcrhbc/" (240309)
+[  aoc2022.cpp: 640]: Walking "/gcrhbc/ccw/" (0)
+[  aoc2022.cpp: 640]: Walking "/gcrhbc/ccw/fgghhg/" (523463)
+[  aoc2022.cpp: 640]: Walking "/gtbd/" (203640)
+[  aoc2022.cpp: 640]: Walking "/gzgmffgdz/" (203870)
+[  aoc2022.cpp: 640]: Walking "/gzgmffgdz/jhcrw/" (70775)
+[  aoc2022.cpp: 650]: Adding "jhcrw" 70775
+[  aoc2022.cpp: 640]: Walking "/gpcqcswz/" (260246)
+[  aoc2022.cpp: 640]: Walking "/gsscfn/" (589266)
+[  aoc2022.cpp: 640]: Walking "/gsscfn/cfthmzh/" (514175)
+[  aoc2022.cpp: 640]: Walking "/gpdgwcshp/" (0)
+[  aoc2022.cpp: 640]: Walking "/gpdgwcshp/cfbfmprt/" (0)
+[  aoc2022.cpp: 640]: Walking "/gpdgwcshp/cfbfmprt/rwflz/" (33792)
+[  aoc2022.cpp: 640]: Walking "/gpdgwcshp/cfbfmprt/rwflz/jrblfq/" (224257)
+[  aoc2022.cpp: 640]: Walking "/grldtppt/" (0)
+[  aoc2022.cpp: 640]: Walking "/grldtppt/nzgg/" (139560)
+[  aoc2022.cpp: 640]: Walking "/glqbh/" (0)
+[  aoc2022.cpp: 640]: Walking "/glqbh/mhdbp/" (28344)
+[  aoc2022.cpp: 640]: Walking "/glqbh/mhdbp/ggb/" (220117)
+[  aoc2022.cpp: 640]: Walking "/glqbh/mhdbp/ggb/hwdtp/" (288606)
+[  aoc2022.cpp: 640]: Walking "/gnqsz/" (252279)
+[  aoc2022.cpp: 640]: Walking "/grrtpqd/" (178)
+[  aoc2022.cpp: 650]: Adding "grrtpqd" 178
+[  aoc2022.cpp: 640]: Walking "/gztrpvlbh/" (596150)
+[  aoc2022.cpp: 640]: Walking "/gvpsj/" (306582)
+[  aoc2022.cpp: 640]: Walking "/gthhgz/" (877506)
+[  aoc2022.cpp: 640]: Walking "/gthhgz/pgfqw/" (379322)
+[  aoc2022.cpp: 640]: Walking "/gzrzmb/" (338223)
+[  aoc2022.cpp: 640]: Walking "/gzrzmb/chjmbq/" (0)
+[  aoc2022.cpp: 640]: Walking "/gzrzmb/chjmbq/svmvlm/" (251057)
+[  aoc2022.cpp: 640]: Walking "/grbms/" (72618)
+[  aoc2022.cpp: 650]: Adding "grbms" 72618
+[  aoc2022.cpp: 640]: Walking "/gjhmvgjrr/" (803017)
+[  aoc2022.cpp: 640]: Walking "/gjhmvgjrr/gdfgtz/" (707713)
+[  aoc2022.cpp: 640]: Walking "/gghv/" (304352)
+[  aoc2022.cpp: 640]: Walking "/gghv/ggb/" (285635)
+[  aoc2022.cpp: 640]: Walking "/gghv/ggb/vzfdbtg/" (0)
+[  aoc2022.cpp: 640]: Walking "/gghv/ggb/vzfdbtg/pqmb/" (219019)
+[  aoc2022.cpp: 640]: Walking "/gnpqbngg/" (242286)
+[  aoc2022.cpp: 640]: Walking "/gnpqbngg/cfbfmprt/" (34347)
+[  aoc2022.cpp: 640]: Walking "/gnpqbngg/cfbfmprt/gpnzggqb/" (280748)
+[  aoc2022.cpp: 640]: Walking "/gnpqbngg/cfbfmprt/gpnzggqb/pjmc/" (465991)
+[  aoc2022.cpp: 640]: Walking "/gnpqbngg/cfbfmprt/gpnzggqb/pjmc/pjmc/" (233588)
+[  aoc2022.cpp: 640]: Walking "/gpqbf/" (233005)
+[  aoc2022.cpp: 640]: Walking "/gqjpwm/" (135441)
+[  aoc2022.cpp: 640]: Walking "/gzjglfpt/" (186963)
+[  aoc2022.cpp: 640]: Walking "/gnvdqw/" (372784)
+[  aoc2022.cpp: 640]: Walking "/gqdtcwm/" (36443)
+[  aoc2022.cpp: 650]: Adding "gqdtcwm" 36443
+[  aoc2022.cpp: 640]: Walking "/gssgg/" (250574)
+[  aoc2022.cpp: 640]: Walking "/ghrqfqpzr/" (143568)
+[  aoc2022.cpp: 640]: Walking "/ghrqfqpzr/sdpjprfb/" (88050)
+[  aoc2022.cpp: 650]: Adding "sdpjprfb" 88050
+[  aoc2022.cpp: 640]: Walking "/gshcrrpc/" (0)
+[  aoc2022.cpp: 640]: Walking "/gshcrrpc/pjmc/" (0)
+[  aoc2022.cpp: 640]: Walking "/gshcrrpc/pjmc/wbj/" (196127)
+[  aoc2022.cpp: 640]: Walking "/gpwnnmpm/" (0)
+[  aoc2022.cpp: 640]: Walking "/gpwnnmpm/cgghrf/" (108742)
+[  aoc2022.cpp: 640]: Walking "/grhgmnqz/" (89791)
+[  aoc2022.cpp: 650]: Adding "grhgmnqz" 89791
+[  aoc2022.cpp: 640]: Walking "/gvnbvq/" (290774)
+[  aoc2022.cpp: 640]: Walking "/gnsnfq/" (0)
+[  aoc2022.cpp: 640]: Walking "/gnsnfq/tgdqz/" (0)
+[  aoc2022.cpp: 640]: Walking "/gnsnfq/tgdqz/ggb/" (0)
+[  aoc2022.cpp: 640]: Walking "/gnsnfq/tgdqz/ggb/rhgmnqz/" (268661)
+[  aoc2022.cpp: 640]: Walking "/grggzmfqm/" (233358)
+[  aoc2022.cpp: 640]: Walking "/gwjdnwg/" (830787)
+[  aoc2022.cpp: 640]: Walking "/gwjdnwg/sqh/" (542528)
+[  aoc2022.cpp: 640]: Walking "/gzgfz/" (391300)
+[  aoc2022.cpp: 640]: Walking "/grfbdg/" (242103)
+[  aoc2022.cpp: 640]: Walking "/grzzwcb/" (0)
+[  aoc2022.cpp: 640]: Walking "/grzzwcb/rhgmnqz/" (80525)
+[  aoc2022.cpp: 650]: Adding "rhgmnqz" 80525
+[  aoc2022.cpp: 650]: Adding "grzzwcb" 0
+[  aoc2022.cpp: 640]: Walking "/gzzcw/" (260646)
+[  aoc2022.cpp: 640]: Walking "/gtqqjp/" (245089)
+[  aoc2022.cpp: 640]: Walking "/gtjlf/" (0)
+[  aoc2022.cpp: 640]: Walking "/gtjlf/pjmc/" (427720)
+[  aoc2022.cpp: 640]: Walking "/gqwvfg/" (293454)
+[  aoc2022.cpp: 640]: Walking "/gsgpnzv/" (451762)
+[  aoc2022.cpp: 640]: Walking "/gnwbndtgl/" (198516)
+[  aoc2022.cpp: 640]: Walking "/gnwbndtgl/fsdvzvvv/" (412814)
+[  aoc2022.cpp: 640]: Walking "/gnwbndtgl/fsdvzvvv/llwbm/" (462616)
+[  aoc2022.cpp: 640]: Walking "/gnwbndtgl/fsdvzvvv/llwbm/qrrs/" (260559)
+[  aoc2022.cpp: 640]: Walking "/glzz/" (0)
+[  aoc2022.cpp: 640]: Walking "/glzz/tnmwncgl/" (301449)
+[  aoc2022.cpp: 640]: Walking "/gwrjjmhz/" (218726)
+[  aoc2022.cpp: 640]: Walking "/grgb/" (499826)
+[  aoc2022.cpp: 640]: Walking "/grgb/bvwn/" (0)
+[  aoc2022.cpp: 640]: Walking "/grgb/bvwn/cfbfmprt/" (234044)
+[  aoc2022.cpp: 640]: Walking "/grgb/bvwn/cfbfmprt/vndbzj/" (0)
+[  aoc2022.cpp: 640]: Walking "/grgb/bvwn/cfbfmprt/vndbzj/cfbfmprt/" (0)
+[  aoc2022.cpp: 640]: Walking "/grgb/bvwn/cfbfmprt/vndbzj/cfbfmprt/ptzpcqh/" (141535)
+[  aoc2022.cpp: 640]: Walking "/gfjmbvhh/" (390316)
+[  aoc2022.cpp: 640]: Walking "/gpdgsf/" (389912)
+[  aoc2022.cpp: 640]: Walking "/gpdgsf/fjdlhn/" (0)
+[  aoc2022.cpp: 640]: Walking "/gpdgsf/fjdlhn/rhgmnqz/" (209357)
+[  aoc2022.cpp: 640]: Walking "/gpdlpwdp/" (59208)
+[  aoc2022.cpp: 640]: Walking "/gpdlpwdp/fwsbsprp/" (177666)
+[  aoc2022.cpp: 640]: Walking "/ggjjjwznz/" (223963)
+[  aoc2022.cpp: 640]: Walking "/gjzpwnpmc/" (46041)
+[  aoc2022.cpp: 640]: Walking "/gjzpwnpmc/cfbfmprt/" (16870)
+[  aoc2022.cpp: 640]: Walking "/gjzpwnpmc/cfbfmprt/slj/" (291893)
+[  aoc2022.cpp: 640]: Walking "/ggpd/" (159168)
+[  aoc2022.cpp: 640]: Walking "/gqlvfslzp/" (722289)
+[  aoc2022.cpp: 640]: Walking "/gqlvfslzp/clnms/" (0)
+[  aoc2022.cpp: 640]: Walking "/gqlvfslzp/clnms/ggb/" (305684)
+[  aoc2022.cpp: 640]: Walking "/gsqhbbsbj/" (150243)
+[  aoc2022.cpp: 640]: Walking "/gqnhl/" (0)
+[  aoc2022.cpp: 640]: Walking "/gqnhl/sdpjprfb/" (306685)
+[  aoc2022.cpp: 640]: Walking "/gsbps/" (478716)
+[  aoc2022.cpp: 640]: Walking "/gsbps/pjmc/" (258951)
+[  aoc2022.cpp: 640]: Walking "/gwvdlv/" (314303)
+[aoc_state.cpp:  37]: Solution to 2022 Day 07 (A): 1174231
+[aoc_state.cpp:  38]: Solution finished in 592ms

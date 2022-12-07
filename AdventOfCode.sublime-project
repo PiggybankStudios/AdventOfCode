@@ -2308,6 +2308,7 @@
 			"Dir3_t Dir3FromIndex(u64 index)",
 			"Dir3_t Dir3Opposite(Dir3_t dir3)",
 			"Dir3_t ToDir3(v3 vector)",
+			"Directory_t* GetDirectory(Directory_t* root, MyStr_t path)",
 			"Dodec_t NewDodec(v3 center, r32 sideLength, quat rotation)",
 			"FontBake_t* AddSpriteSheetAsFontBake(Font_t* font, FontFace_t* face, SpriteSheet_t* spriteSheet, bool scalable, bool colored)",
 			"FontBake_t* FontAddBakeToActiveFace(Font_t* font, FontFace_t* face, v2i bakeSize, u64 numRanges, PlatFontRange_t* ranges)",
