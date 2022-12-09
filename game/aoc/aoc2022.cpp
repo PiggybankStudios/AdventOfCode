@@ -559,36 +559,36 @@ MyStr_t AocSolutionFunc_2022_06(AocSolutionStruct_2022_06_t* data, bool doSoluti
 // +==============================+
 // |            Day 07            |
 // +==============================+
-enum Command_t
+enum Aoc2022_07_Command_t
 {
-	Command_Cd = 0,
-	Command_Ls,
-	Command_Dir,
-	Command_NumCommands,
+	Aoc2022_07_Command_Cd = 0,
+	Aoc2022_07_Command_Ls,
+	Aoc2022_07_Command_Dir,
+	Aoc2022_07_Command_NumCommands,
 };
-const char* GetCommandStr(Command_t enumValue)
+const char* GetCommandStr(Aoc2022_07_Command_t enumValue)
 {
 	switch (enumValue)
 	{
-		case Command_Cd:  return "Cd";
-		case Command_Ls:  return "Ls";
-		case Command_Dir: return "Dir";
+		case Aoc2022_07_Command_Cd:  return "Cd";
+		case Aoc2022_07_Command_Ls:  return "Ls";
+		case Aoc2022_07_Command_Dir: return "Dir";
 		default: return "Unknown";
 	}
 }
-struct Directory_t
+struct Aoc2022_07_Directory_t
 {
 	MyStr_t name;
 	VarArray_t children;
 	u64 contentsSize;
 };
-Directory_t* GetDirectory(Directory_t* root, MyStr_t path)
+Aoc2022_07_Directory_t* Aoc2022_07_GetDirectory(Aoc2022_07_Directory_t* root, MyStr_t path)
 {
 	TempPushMark();
 	if (StrStartsWith(path, "/")) { path.pntr++; path.length--; }
 	u64 numPieces = 0;
 	MyStr_t* pieces = SplitString(TempArena, path, "/", &numPieces);
-	Directory_t* dir = root;
+	Aoc2022_07_Directory_t* dir = root;
 	for (u64 pIndex = 0; pIndex < numPieces; pIndex++)
 	{
 		if (IsEmptyStr(pieces[pIndex])) { continue; }
@@ -596,7 +596,7 @@ Directory_t* GetDirectory(Directory_t* root, MyStr_t path)
 		bool foundDir = false;
 		for (u64 cIndex = 0; cIndex < dir->children.length; cIndex++)
 		{
-			Directory_t* child = VarArrayGet(&dir->children, cIndex, Directory_t);
+			Aoc2022_07_Directory_t* child = VarArrayGet(&dir->children, cIndex, Aoc2022_07_Directory_t);
 			if (StrEqualsIgnoreCase(child->name, pieces[pIndex]))
 			{
 				dir = child;
@@ -614,10 +614,10 @@ Directory_t* GetDirectory(Directory_t* root, MyStr_t path)
 				dir->name.length, dir->name.pntr,
 				path.length, path.pntr
 			);
-			Directory_t* newDir = VarArrayAdd(&dir->children, Directory_t);
+			Aoc2022_07_Directory_t* newDir = VarArrayAdd(&dir->children, Aoc2022_07_Directory_t);
 			ClearPointer(newDir);
 			newDir->name = AllocString(aocArena, &pieces[pIndex]);
-			CreateVarArray(&newDir->children, aocArena, sizeof(Directory_t));
+			CreateVarArray(&newDir->children, aocArena, sizeof(Aoc2022_07_Directory_t));
 			newDir->contentsSize = 0;
 			dir = newDir;
 		}
@@ -625,31 +625,31 @@ Directory_t* GetDirectory(Directory_t* root, MyStr_t path)
 	TempPopMark();
 	return dir;
 }
-Command_t GetCommand(MyStr_t str)
+Aoc2022_07_Command_t Aoc2022_07_GetCommand(MyStr_t str)
 {
-	for (u64 eIndex = 0; eIndex < Command_NumCommands; eIndex++)
+	for (u64 eIndex = 0; eIndex < Aoc2022_07_Command_NumCommands; eIndex++)
 	{
-		if (StrEqualsIgnoreCase(NewStr(GetCommandStr((Command_t)eIndex)), str))
+		if (StrEqualsIgnoreCase(NewStr(GetCommandStr((Aoc2022_07_Command_t)eIndex)), str))
 		{
-			return (Command_t)eIndex;
+			return (Aoc2022_07_Command_t)eIndex;
 		}
 	}
-	return Command_NumCommands;
+	return Aoc2022_07_Command_NumCommands;
 }
-#define NEEDED_SPACE 8381165
-u64 WalkDirectories(Directory_t* base, MyStr_t basePath, u64* resultOut, bool doSolutionB)
+#define AOC_2022_07_NEEDED_SPACE 8381165
+u64 Aoc2022_07_WalkDirectories(Aoc2022_07_Directory_t* base, MyStr_t basePath, u64* resultOut, bool doSolutionB)
 {
 	MyStr_t path = TempPrintStr("%.*s%.*s%s", basePath.length, basePath.pntr, base->name.length, base->name.pntr, (basePath.length == 0 ? "" : "/"));
 	PrintLine_D("Walking \"%.*s\" (%llu)", path.length, path.pntr, base->contentsSize);
 	u64 dirSize = base->contentsSize;
 	VarArrayLoop(&base->children, cIndex)
 	{
-		VarArrayLoopGet(Directory_t, child, &base->children, cIndex);
-		dirSize += WalkDirectories(child, path, resultOut, doSolutionB);
+		VarArrayLoopGet(Aoc2022_07_Directory_t, child, &base->children, cIndex);
+		dirSize += Aoc2022_07_WalkDirectories(child, path, resultOut, doSolutionB);
 	}
 	if (doSolutionB)
 	{
-		if (dirSize >= NEEDED_SPACE && (*resultOut == 0 || dirSize < *resultOut))
+		if (dirSize >= AOC_2022_07_NEEDED_SPACE && (*resultOut == 0 || dirSize < *resultOut))
 		{
 			*resultOut = dirSize;
 		}
@@ -672,10 +672,10 @@ MyStr_t AocSolutionFunc_2022_07(AocSolutionStruct_2022_07_t* data, bool doSoluti
 	MyStr_t currentDirStr = MyStr_Empty;
 	u64 currentDirSize = 0;
 	
-	Directory_t parentDir = {};
-	CreateVarArray(&parentDir.children, aocArena, sizeof(Directory_t));
+	Aoc2022_07_Directory_t parentDir = {};
+	CreateVarArray(&parentDir.children, aocArena, sizeof(Aoc2022_07_Directory_t));
 	parentDir.name = NewStr("/");
-	Directory_t* currentDir = &parentDir;
+	Aoc2022_07_Directory_t* currentDir = &parentDir;
 	
 	u64 result = 0;
 	AocLoopFile(file, parser, line)
@@ -686,8 +686,8 @@ MyStr_t AocSolutionFunc_2022_07(AocSolutionStruct_2022_07_t* data, bool doSoluti
 		if (StrEquals(pieces[0], "$"))
 		{
 			PrintLine_D("Executing \"%.*s\"", line.length, line.pntr);
-			Command_t command = GetCommand(pieces[1]);
-			if (command == Command_Cd)
+			Aoc2022_07_Command_t command = Aoc2022_07_GetCommand(pieces[1]);
+			if (command == Aoc2022_07_Command_Cd)
 			{
 				if (StrEqualsIgnoreCase(pieces[2], ".."))
 				{
@@ -708,9 +708,9 @@ MyStr_t AocSolutionFunc_2022_07(AocSolutionStruct_2022_07_t* data, bool doSoluti
 				}
 				
 				// PrintLine_D("In \"%.*s\"", currentDirStr.length, currentDirStr.pntr);
-				currentDir = GetDirectory(&parentDir, currentDirStr);
+				currentDir = Aoc2022_07_GetDirectory(&parentDir, currentDirStr);
 			}
-			else if (command == Command_Ls)
+			else if (command == Aoc2022_07_Command_Ls)
 			{
 				//do nothing
 			}
@@ -728,7 +728,7 @@ MyStr_t AocSolutionFunc_2022_07(AocSolutionStruct_2022_07_t* data, bool doSoluti
 	}
 	AocCloseFile(file);
 	
-	WalkDirectories(&parentDir, MyStr_Empty, &result, doSolutionB);
+	Aoc2022_07_WalkDirectories(&parentDir, MyStr_Empty, &result, doSolutionB);
 	
 	AocReturnU64(result);
 }
@@ -738,8 +738,143 @@ MyStr_t AocSolutionFunc_2022_07(AocSolutionStruct_2022_07_t* data, bool doSoluti
 // +==============================+
 MyStr_t AocSolutionFunc_2022_08(AocSolutionStruct_2022_08_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_08 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_08.txt");
+	// AocOpenFile(file, "input_2022_08_ex.txt");
+	
+	#define MAX_NUM_COLUMNS 100
+	#define MAX_NUM_ROWS 100
+	u64 numColumns = 0;
+	u64 numRows = 0;
+	u64 treeHeights[MAX_NUM_COLUMNS][MAX_NUM_ROWS];
+	
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		if (numColumns == 0) { numColumns = line.length; }
+		for (u64 cIndex = 0; cIndex < line.length; cIndex++)
+		{
+			treeHeights[cIndex][numRows] = (u64)(line.chars[cIndex] - '0');
+		}
+		numRows++;
+	}
+	AocCloseFile(file);
+	
+	if (doSolutionB)
+	{
+		i64 foundTreeViewValue = -1;
+		v2i foundTreePos = NewVec2i(-1, -1);
+		
+		for (u64 yIndex = 0; yIndex < numRows; yIndex++)
+		{
+			for (u64 xIndex = 0; xIndex < numColumns; xIndex++)
+			{
+				u64 treeHeight = treeHeights[xIndex][yIndex];
+				u64 maxTreeLeft = 0;
+				u64 maxTreeRight = 0;
+				u64 maxTreeUp = 0;
+				u64 maxTreeDown = 0;
+				u64 numTreesLeft = 0;
+				u64 numTreesRight = 0;
+				u64 numTreesUp = 0;
+				u64 numTreesDown = 0;
+				for (u64 offset = 1; offset < MaxU64(numRows, numColumns); offset++)
+				{
+					v2i treeLeftPos = NewVec2i((i32)xIndex - (i32)offset, (i32)yIndex);
+					v2i treeRightPos = NewVec2i((i32)xIndex + (i32)offset, (i32)yIndex);
+					v2i treeUpPos = NewVec2i((i32)xIndex, (i32)yIndex - (i32)offset);
+					v2i treeDownPos = NewVec2i((i32)xIndex, (i32)yIndex + (i32)offset);
+					if (treeLeftPos.x >= 0          && maxTreeLeft  < treeHeight) { numTreesLeft++;  }
+					if (treeRightPos.x < numColumns && maxTreeRight < treeHeight) { numTreesRight++; }
+					if (treeUpPos.y >= 0            && maxTreeUp    < treeHeight) { numTreesUp++;    }
+					if (treeDownPos.y < numRows     && maxTreeDown  < treeHeight) { numTreesDown++;  }
+					if (treeLeftPos.x >= 0)          { maxTreeLeft  = MaxU64(maxTreeLeft,  treeHeights[treeLeftPos.x][treeLeftPos.y]);   }
+					if (treeRightPos.x < numColumns) { maxTreeRight = MaxU64(maxTreeRight, treeHeights[treeRightPos.x][treeRightPos.y]); }
+					if (treeUpPos.y >= 0)            { maxTreeUp    = MaxU64(maxTreeUp,    treeHeights[treeUpPos.x][treeUpPos.y]);       }
+					if (treeDownPos.y < numRows)     { maxTreeDown  = MaxU64(maxTreeDown,  treeHeights[treeDownPos.x][treeDownPos.y]);   }
+				}
+				
+				u64 viewValue = numTreesLeft * numTreesRight * numTreesUp * numTreesDown;
+				if (foundTreeViewValue < 0 || viewValue > (u64)foundTreeViewValue)
+				{
+					PrintLine_D("(%llu, %llu) with height %llu has view %llu (%llu left %llu right %llu up %llu down)", xIndex, yIndex, treeHeight, viewValue, numTreesLeft, numTreesRight, numTreesUp, numTreesDown);
+					foundTreeViewValue = (i64)viewValue;
+					foundTreePos = NewVec2i((i32)xIndex, (i32)yIndex);
+				}
+			}
+		}
+		
+		PrintLine_D("They should build their tree at (%d, %d) with %llu trees visible", foundTreePos.x, foundTreePos.y, foundTreeViewValue);
+		result = (u64)foundTreeViewValue;
+	}
+	else
+	{
+		char treeIsVisible[MAX_NUM_COLUMNS][MAX_NUM_ROWS];
+		MyMemSet(&treeIsVisible[0][0], 0x00, sizeof(char) * MAX_NUM_COLUMNS * MAX_NUM_ROWS);
+		
+		// for (u64 yIndex = 0; yIndex < numRows; yIndex++)
+		// {
+		// 	for (u64 xIndex = 0; xIndex < numColumns; xIndex++)
+		// 	{
+		// 		Print_D("%llu ", treeHeights[xIndex][yIndex]);
+		// 	}
+		// 	WriteLine_D("");
+		// }
+		
+		for (u64 majorIndex = 0; majorIndex < MaxU64(numColumns, numRows); majorIndex++)
+		{
+			i64 leftMaxFound = -1;
+			i64 rightMaxFound = -1;
+			i64 topMaxFound = -1;
+			i64 bottomMaxFound = -1;
+			for (u64 minorIndex = 0; minorIndex < MaxU64(numColumns, numRows); minorIndex++)
+			{
+				if (majorIndex < numRows && minorIndex < numColumns)
+				{
+					u64 nextLeftHeight = treeHeights[minorIndex][majorIndex];
+					u64 nextRightHeight = treeHeights[numColumns-1 - minorIndex][majorIndex];
+					// PrintLine_D("L at (%llu, %llu) at %d and R at (%llu, %llu) at %d", minorIndex, majorIndex, leftMaxFound, numColumns-1 - minorIndex, majorIndex, rightMaxFound);
+					if (leftMaxFound < 0 || nextLeftHeight > (u64)leftMaxFound)
+					{
+						leftMaxFound = (i64)nextLeftHeight;
+						if (treeIsVisible[minorIndex][majorIndex] == '\0') { result++; treeIsVisible[minorIndex][majorIndex] = 'L'; /*PrintLine_D("L +1=%llu", result);*/ }
+					}
+					if (rightMaxFound < 0 || nextRightHeight > (u64)rightMaxFound)
+					{
+						rightMaxFound = (i64)nextRightHeight;
+						if (treeIsVisible[numColumns-1 - minorIndex][majorIndex] == '\0') { result++; treeIsVisible[numColumns-1 - minorIndex][majorIndex] = 'R'; /*PrintLine_D("R +1=%llu", result);*/ }
+					}
+				}
+				if (majorIndex < numColumns && minorIndex < numRows)
+				{
+					u64 nextTopHeight = treeHeights[majorIndex][minorIndex];
+					u64 nextBottomHeight = treeHeights[majorIndex][numRows-1 - minorIndex];
+					// PrintLine_D("T at (%llu, %llu) at %d and B at (%llu, %llu) at %d", majorIndex, minorIndex, topMaxFound, majorIndex, numRows-1 - minorIndex, bottomMaxFound);
+					if (topMaxFound < 0 || nextTopHeight > (u64)topMaxFound)
+					{
+						topMaxFound = (i64)nextTopHeight;
+						if (treeIsVisible[majorIndex][minorIndex] == '\0') { result++; treeIsVisible[majorIndex][minorIndex] = 'T'; /*PrintLine_D("T +1=%llu", result);*/ }
+					}
+					if (bottomMaxFound < 0 || nextBottomHeight > (u64)bottomMaxFound)
+					{
+						bottomMaxFound = (i64)nextBottomHeight;
+						if (treeIsVisible[majorIndex][numRows-1 - minorIndex] == '\0') { result++; treeIsVisible[majorIndex][numRows-1 - minorIndex] = 'B'; /*PrintLine_D("B +1=%llu", result);*/ }
+					}
+				}
+			}
+		}
+				
+		// PrintLine_D("(%llu, %llu)", numColumns, numRows);
+		// for (u64 yIndex = 0; yIndex < numRows; yIndex++)
+		// {
+		// 	for (u64 xIndex = 0; xIndex < numColumns; xIndex++)
+		// 	{
+		// 		Print_D("%c", treeIsVisible[xIndex][yIndex] ? treeIsVisible[xIndex][yIndex] : '.');
+		// 	}
+		// 	WriteLine_D("");
+		// }
+	}
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
@@ -747,8 +882,86 @@ MyStr_t AocSolutionFunc_2022_08(AocSolutionStruct_2022_08_t* data, bool doSoluti
 // +==============================+
 MyStr_t AocSolutionFunc_2022_09(AocSolutionStruct_2022_09_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_09 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_09.txt");
+	// AocOpenFile(file, "input_2022_09_ex.txt");
+	
+	#define MAX_X 1000
+	#define MAX_Y 1000
+	bool visited[MAX_X][MAX_Y];
+	MyMemSet(&visited[0][0], 0x00, sizeof(bool) * MAX_X * MAX_Y);
+	
+	#define NUM_TAILS 9
+	#define LAST_TAIL (NUM_TAILS - 1)
+	v2i headPos = NewVec2i((i32)MAX_X/2, (i32)MAX_Y/2);
+	v2i tailPos[NUM_TAILS];
+	for (u64 tIndex = 0; tIndex < NUM_TAILS; tIndex++)
+	{
+		tailPos[tIndex] = headPos;
+	}
+	visited[tailPos[LAST_TAIL].x][tailPos[LAST_TAIL].y] = true;
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		u64 spaceIndex = 0;
+		FindSubstring(line, " ", &spaceIndex);
+		MyStr_t dirStr = StrSubstring(&line, 0, spaceIndex);
+		MyStr_t amountStr = StrSubstring(&line, spaceIndex+1);
+		Dir2_t dir = Dir2_None;
+		if (StrEqualsIgnoreCase(dirStr, "R")) { dir = Dir2_Right; }
+		else if (StrEqualsIgnoreCase(dirStr, "L")) { dir = Dir2_Left; }
+		else if (StrEqualsIgnoreCase(dirStr, "U")) { dir = Dir2_Up; }
+		else if (StrEqualsIgnoreCase(dirStr, "D")) { dir = Dir2_Down; }
+		v2i dirVec = ToVec2i(dir);
+		u64 amount = 0;
+		TryParseU64(amountStr, &amount);
+		
+		PrintLine_D("Moving %s %llu", GetDir2String(dir), amount);
+		for (u64 aIndex = 0; aIndex < amount; aIndex++)
+		{
+			headPos += dirVec;
+			for (u64 tIndex = 0; tIndex < NUM_TAILS; tIndex++)
+			{
+				v2i nextPos = (tIndex == 0) ? headPos : tailPos[tIndex-1];
+				if (nextPos.x >= tailPos[tIndex].x + 2)
+				{
+					tailPos[tIndex].x++;
+					if (nextPos.y != tailPos[tIndex].y) { tailPos[tIndex].y += SignOfI32(nextPos.y - tailPos[tIndex].y); }
+				}
+				else if (nextPos.x <= tailPos[tIndex].x - 2)
+				{
+					tailPos[tIndex].x--;
+					if (nextPos.y != tailPos[tIndex].y) { tailPos[tIndex].y += SignOfI32(nextPos.y - tailPos[tIndex].y); }
+				}
+				else if (nextPos.y >= tailPos[tIndex].y + 2)
+				{
+					tailPos[tIndex].y++;
+					if (nextPos.x != tailPos[tIndex].x) { tailPos[tIndex].x += SignOfI32(nextPos.x - tailPos[tIndex].x); }
+				}
+				else if (nextPos.y <= tailPos[tIndex].y - 2)
+				{
+					tailPos[tIndex].y--;
+					if (nextPos.x != tailPos[tIndex].x) { tailPos[tIndex].x += SignOfI32(nextPos.x - tailPos[tIndex].x); }
+				}
+				Assert(tailPos[tIndex].x >= 0 && tailPos[tIndex].y >= 0);
+				Assert(tailPos[tIndex].x < MAX_X && tailPos[tIndex].y < MAX_Y);
+				if (tIndex == LAST_TAIL) { visited[tailPos[tIndex].x][tailPos[tIndex].y] = true; }
+			}
+		}
+	}
+	AocCloseFile(file);
+	
+	for (u64 yIndex = 0; yIndex < MAX_Y; yIndex++)
+	{
+		for (u64 xIndex = 0; xIndex < MAX_X; xIndex++)
+		{
+			bool visitedValue = visited[xIndex][yIndex];
+			// Print_D("%s", visitedValue ? "#" : ".");
+			if (visitedValue) { result++; }
+		}
+		// WriteLine_D("");
+	}
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
