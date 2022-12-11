@@ -10,6 +10,7 @@ Description:
 
 #define AocReturnI32(valueI32) return TempPrintStr("%d", valueI32)
 #define AocReturnU64(valueU64) return TempPrintStr("%llu", valueU64)
+#define AocReturnI64(valueI64) return TempPrintStr("%lld", valueI64)
 
 // +--------------------------------------------------------------+
 // |                    Enum Parsing Shorthand                    |

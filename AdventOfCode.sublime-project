@@ -1741,6 +1741,7 @@
 			"#define AocOpenFile(fileVarName, fileName)",
 			"#define AocParseEnumFunc(enumBaseName, numWhatSuffix)",
 			"#define AocReturnI32(valueI32)",
+			"#define AocReturnI64(valueI64)",
 			"#define AocReturnU64(valueU64)",
 			"#define AocVarArrayU64(arrayVarName)",
 			"#define ArenaDelete(type, pntr, arena)",

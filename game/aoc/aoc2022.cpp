@@ -885,21 +885,23 @@ MyStr_t AocSolutionFunc_2022_09(AocSolutionStruct_2022_09_t* data, bool doSoluti
 	AocOpenFile(file, "input_2022_09.txt");
 	// AocOpenFile(file, "input_2022_09_ex.txt");
 	
-	#define MAX_X 1000
-	#define MAX_Y 1000
-	bool visited[MAX_X][MAX_Y];
-	MyMemSet(&visited[0][0], 0x00, sizeof(bool) * MAX_X * MAX_Y);
+	#define AOC2022_09_GRID_WIDTH 1000
+	#define AOC2022_09_GRID_HEIGHT 1000
+	bool visited[AOC2022_09_GRID_WIDTH][AOC2022_09_GRID_HEIGHT];
+	MyMemSet(&visited[0][0], 0x00, sizeof(bool) * AOC2022_09_GRID_WIDTH * AOC2022_09_GRID_HEIGHT);
 	
-	#define NUM_TAILS 9
-	#define LAST_TAIL (NUM_TAILS - 1)
-	v2i headPos = NewVec2i((i32)MAX_X/2, (i32)MAX_Y/2);
-	v2i tailPos[NUM_TAILS];
-	for (u64 tIndex = 0; tIndex < NUM_TAILS; tIndex++)
+	u64 numTails = (doSolutionB ? 9 : 1);
+	u64 lastTail = (numTails - 1);
+	#define AOC2022_09_MAX_NUM_TAILS 9
+	v2i headPos = NewVec2i((i32)AOC2022_09_GRID_WIDTH/2, (i32)AOC2022_09_GRID_HEIGHT/2);
+	v2i tailPos[AOC2022_09_MAX_NUM_TAILS];
+	for (u64 tIndex = 0; tIndex < numTails; tIndex++)
 	{
 		tailPos[tIndex] = headPos;
 	}
-	visited[tailPos[LAST_TAIL].x][tailPos[LAST_TAIL].y] = true;
-	u64 result = 0;
+	visited[tailPos[lastTail].x][tailPos[lastTail].y] = true;
+	reci visitedRec = NewReci(tailPos[lastTail].x, tailPos[lastTail].y, 1, 1);
+	u64 result = 1;
 	AocLoopFile(file, parser, line)
 	{
 		u64 spaceIndex = 0;
@@ -915,11 +917,11 @@ MyStr_t AocSolutionFunc_2022_09(AocSolutionStruct_2022_09_t* data, bool doSoluti
 		u64 amount = 0;
 		TryParseU64(amountStr, &amount);
 		
-		PrintLine_D("Moving %s %llu", GetDir2String(dir), amount);
+		// PrintLine_D("Moving %s %llu", GetDir2String(dir), amount);
 		for (u64 aIndex = 0; aIndex < amount; aIndex++)
 		{
 			headPos += dirVec;
-			for (u64 tIndex = 0; tIndex < NUM_TAILS; tIndex++)
+			for (u64 tIndex = 0; tIndex < numTails; tIndex++)
 			{
 				v2i nextPos = (tIndex == 0) ? headPos : tailPos[tIndex-1];
 				if (nextPos.x >= tailPos[tIndex].x + 2)
@@ -943,23 +945,30 @@ MyStr_t AocSolutionFunc_2022_09(AocSolutionStruct_2022_09_t* data, bool doSoluti
 					if (nextPos.x != tailPos[tIndex].x) { tailPos[tIndex].x += SignOfI32(nextPos.x - tailPos[tIndex].x); }
 				}
 				Assert(tailPos[tIndex].x >= 0 && tailPos[tIndex].y >= 0);
-				Assert(tailPos[tIndex].x < MAX_X && tailPos[tIndex].y < MAX_Y);
-				if (tIndex == LAST_TAIL) { visited[tailPos[tIndex].x][tailPos[tIndex].y] = true; }
+				Assert(tailPos[tIndex].x < AOC2022_09_GRID_WIDTH && tailPos[tIndex].y < AOC2022_09_GRID_HEIGHT);
+				if (tIndex == lastTail && !visited[tailPos[tIndex].x][tailPos[tIndex].y])
+				{
+					visited[tailPos[tIndex].x][tailPos[tIndex].y] = true;
+					visitedRec = ReciExpandToVec2i(visitedRec, tailPos[tIndex]);
+					result++;
+				}
 			}
 		}
 	}
 	AocCloseFile(file);
 	
-	for (u64 yIndex = 0; yIndex < MAX_Y; yIndex++)
+	PrintLine_D("Covered an area %dx%d at offset (%d, %d)", visitedRec.width, visitedRec.height, visitedRec.x, visitedRec.y);
+	#if 0
+	for (u64 yIndex = visitedRec.y; yIndex < visitedRec.y + visitedRec.height; yIndex++)
 	{
-		for (u64 xIndex = 0; xIndex < MAX_X; xIndex++)
+		for (u64 xIndex = visitedRec.x; xIndex < visitedRec.x + visitedRec.width; xIndex++)
 		{
 			bool visitedValue = visited[xIndex][yIndex];
-			// Print_D("%s", visitedValue ? "#" : ".");
-			if (visitedValue) { result++; }
+			Print_D("%s", visitedValue ? "#" : ".");
 		}
-		// WriteLine_D("");
+		WriteLine_D("");
 	}
+	#endif
 	
 	AocReturnU64(result);
 }
@@ -967,10 +976,73 @@ MyStr_t AocSolutionFunc_2022_09(AocSolutionStruct_2022_09_t* data, bool doSoluti
 // +==============================+
 // |            Day 10            |
 // +==============================+
+#define CRT_WIDTH 40
+#define CRT_HEIGHT 6
+void RunCycle(bool doSolutionB, i64* result, char* crtDisplay, u64* cycle, i64 xReg)
+{
+	if (doSolutionB)
+	{
+		v2i crtPos = NewVec2i((i32)(((*cycle) - 1) % CRT_WIDTH), (i32)(((*cycle) - 1) / CRT_WIDTH));
+		char* crtChar = &crtDisplay[(crtPos.y * CRT_WIDTH) + crtPos.x];
+		bool isPixelFilled = ((xReg-1) <= crtPos.x && (xReg-1) > crtPos.x - 3);
+		// PrintLine_D("Pos (%d, %d) is %s", crtPos.x, crtPos.y, isPixelFilled ? "Filled" : "Empty");
+		*crtChar = (isPixelFilled ? '#' : '.');
+	}
+	else
+	{
+		if ((*cycle) >= 20 && ((*cycle) - 20) % 40 == 0)
+		{
+			PrintLine_I("Measuring: %lld + (%llu * %lld) or %lld = %lld", *result, xReg, *cycle, (*cycle) * xReg, (*result) + ((*cycle) * xReg));
+			*result += ((*cycle) * xReg);
+		}
+	}
+	*cycle += 1;
+}
 MyStr_t AocSolutionFunc_2022_10(AocSolutionStruct_2022_10_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_10 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_10.txt");
+	// AocOpenFile(file, "input_2022_10_ex.txt");
+	
+	char crtDisplay[CRT_WIDTH * CRT_HEIGHT];
+	MyMemSet(&crtDisplay[0], '-', sizeof(char) * CRT_WIDTH * CRT_HEIGHT);
+	
+	i64 result = 0;
+	u64 cycle = 1;
+	i64 xReg = 1;
+	AocLoopFile(file, parser, line)
+	{
+		if (StrStartsWith(line, "addx "))
+		{
+			i64 addValue = 0;
+			TryParseI64(StrSubstring(&line, 5), &addValue);
+			// PrintLine_D("%lld+%lld [%llu, %llu] -> %lld", xReg, addValue, cycle, cycle+2, xReg + addValue);
+			RunCycle(doSolutionB, &result, &crtDisplay[0], &cycle, xReg);
+			RunCycle(doSolutionB, &result, &crtDisplay[0], &cycle, xReg);
+			xReg += addValue;
+		}
+		else if (StrStartsWith(line, "noop"))
+		{
+			// PrintLine_D("Noop on cycle %llu", cycle);
+			RunCycle(doSolutionB, &result, &crtDisplay[0], &cycle, xReg);
+		}
+		else { PrintLine_E("Invalid line \"%.*s\"", line.length, line.pntr); }
+	}
+	AocCloseFile(file);
+	
+	if (doSolutionB)
+	{
+		PrintLine_D("Ended on cycle %llu:", cycle);
+		for (u64 yIndex = 0; yIndex < CRT_HEIGHT; yIndex++)
+		{
+			for (u64 xIndex = 0; xIndex < CRT_WIDTH; xIndex++)
+			{
+				Print_D("%c", crtDisplay[(yIndex * CRT_WIDTH) + xIndex]);
+			}
+			WriteLine_D("");
+		}
+	}
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
