@@ -1315,10 +1315,213 @@ MyStr_t AocSolutionFunc_2022_11(AocSolutionStruct_2022_11_t* data, bool doSoluti
 // +==============================+
 // |            Day 12            |
 // +==============================+
+#define MAX_MAP_WIDTH  128
+#define MAX_MAP_HEIGHT 128
+struct SearchPos_t
+{
+	v2i pos;
+	Dir2_t prevDir;
+	u64 distanceFromStart;
+};
+bool DoesSearchPosArrayContainPos(VarArray_t* searchPosArray, v2i pos)
+{
+	VarArrayLoop(searchPosArray, pIndex)
+	{
+		VarArrayLoopGet(SearchPos_t, searchPos, searchPosArray, pIndex);
+		if (searchPos->pos == pos) { return true; }
+	}
+	return false;
+}
+SearchPos_t* TryFindSearchPosArrayPos(VarArray_t* searchPosArray, v2i pos)
+{
+	VarArrayLoop(searchPosArray, pIndex)
+	{
+		VarArrayLoopGet(SearchPos_t, searchPos, searchPosArray, pIndex);
+		if (searchPos->pos == pos) { return searchPos; }
+	}
+	return nullptr;
+}
+SearchPos_t* AddSearchPos(VarArray_t* searchPosArray, v2i pos, Dir2_t prevDir, u64 distanceFromStart)
+{
+	SearchPos_t* newPos = VarArrayAdd(searchPosArray, SearchPos_t);
+	ClearPointer(newPos);
+	newPos->pos = pos;
+	newPos->prevDir = prevDir;
+	newPos->distanceFromStart = distanceFromStart;
+	return newPos;
+}
+SearchPos_t* MoveSearchPos(VarArray_t* fromArray, u64 fromIndex, VarArray_t* toArray)
+{
+	Assert(fromArray != toArray);
+	SearchPos_t* fromItem = VarArrayGetHard(fromArray, fromIndex, SearchPos_t);
+	SearchPos_t* toItem = VarArrayAdd(toArray, SearchPos_t);
+	MyMemCopy(toItem, fromItem, sizeof(SearchPos_t));
+	VarArrayRemove(fromArray, fromIndex, SearchPos_t);
+	return toItem;
+}
 MyStr_t AocSolutionFunc_2022_12(AocSolutionStruct_2022_12_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_12 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, (KeyDownRaw(Key_E) ? "input_2022_12_ex.txt" : "input_2022_12.txt"));
+	
+	v2i startPos = Vec2i_Zero;
+	v2i endPos = Vec2i_Zero;
+	v2i mapSize = Vec2i_Zero;
+	u8 heights[MAX_MAP_WIDTH][MAX_MAP_HEIGHT];
+	MyMemSet(&heights[0], 0x00, sizeof(u8) * MAX_MAP_WIDTH * MAX_MAP_HEIGHT);
+	
+	u64 result = 0;
+	AocLoopFile(file, parser, line)
+	{
+		Assert(line.length <= MAX_MAP_WIDTH);
+		Assert(mapSize.height < MAX_MAP_HEIGHT);
+		if ((i32)line.length > mapSize.width) { mapSize.width = (i32)line.length; }
+		
+		for (u64 cIndex = 0; cIndex < line.length; cIndex++)
+		{
+			u8 height = 0;
+			if (line.chars[cIndex] == 'S')
+			{
+				height = 0;
+				startPos = NewVec2i((i32)cIndex, mapSize.height);
+			}
+			else if (line.chars[cIndex] == 'E')
+			{
+				height = 25;
+				endPos = NewVec2i((i32)cIndex, mapSize.height);
+			}
+			else
+			{
+				Assert(line.chars[cIndex] >= 'a' && line.chars[cIndex] <= 'z');
+				height = (u8)(line.chars[cIndex] - 'a');
+			}
+			heights[cIndex][mapSize.height] = height;
+		}
+		
+		mapSize.height++;
+	}
+	AocCloseFile(file);
+	
+	VarArray_t searched;
+	VarArray_t candidates;
+	CreateVarArray(&searched, aocArena, sizeof(SearchPos_t), (u64)(mapSize.width * mapSize.height));
+	CreateVarArray(&candidates, aocArena, sizeof(SearchPos_t), (u64)(mapSize.width * mapSize.height));
+	
+	if (doSolutionB)
+	{
+		AddSearchPos(&candidates, endPos, Dir2_None, 0);
+	}
+	else
+	{
+		AddSearchPos(&candidates, startPos, Dir2_None, 0);
+	}
+	
+	SearchPos_t* endSearchPos = nullptr;
+	u64 iteration = 0;
+	while (candidates.length > 0)
+	{
+		// PrintLine_D("Iteration[%llu]: %llu candidates %llu searched", iteration, candidates.length, searched.length);
+		
+		SearchPos_t* thisSearchPos = MoveSearchPos(&candidates, 0, &searched);
+		v2i thisPos = thisSearchPos->pos;
+		u8 thisHeight = heights[thisPos.x][thisPos.y];
+		u64 thisDistance = thisSearchPos->distanceFromStart;
+		
+		if (doSolutionB && thisHeight == 0)
+		{
+			PrintLine_D("Found a good starting position at (%d, %d) for a total distance of %llu to end!!", thisPos.x, thisPos.y, thisDistance);
+			result = thisDistance;
+			endSearchPos = thisSearchPos;
+			break;
+		}
+		else if (!doSolutionB && thisPos == endPos)
+		{
+			PrintLine_D("Found the end pos after %llu iterations and %llu distance from start!!", iteration, thisDistance);
+			result = thisDistance;
+			endSearchPos = thisSearchPos;
+			break;
+		}
+		else
+		{
+			// PrintLine_D("Searching from (%d, %d) at height %u and %llu from start...", thisPos.x, thisPos.y, thisHeight, thisDistance);
+		}
+		
+		for (u8 dIndex = 0; dIndex < Dir2_Count; dIndex++)
+		{
+			Dir2_t nextDir = Dir2FromIndex(dIndex);
+			v2i nextPos = thisPos + ToVec2i(nextDir);
+			u64 nextDistance = thisDistance + 1;
+			if (nextPos.x >= 0 && nextPos.y >= 0 &&
+				nextPos.x < mapSize.width && nextPos.y < mapSize.height)
+			{
+				u8 nextHeight = heights[nextPos.x][nextPos.y];
+				if ((doSolutionB && nextHeight >= thisHeight-1) ||
+					(!doSolutionB && nextHeight <= thisHeight+1))
+				{
+					SearchPos_t* existingPos = TryFindSearchPosArrayPos(&searched, nextPos);
+					if (existingPos == nullptr)
+					{
+						existingPos = TryFindSearchPosArrayPos(&candidates, nextPos);
+						if (existingPos == nullptr)
+						{
+							AddSearchPos(&candidates, nextPos, Dir2Opposite(nextDir), nextDistance);
+						}
+						else if (existingPos->distanceFromStart > nextDistance)
+						{
+							existingPos->distanceFromStart = nextDistance;
+							existingPos->prevDir = Dir2Opposite(nextDir);
+						}
+					}
+					else if (existingPos->distanceFromStart > nextDistance)
+					{
+						WriteLine_W("We found a searched position that contains a higher distanceFromStart!!");
+					}
+				}
+			}
+		}
+		
+		iteration++;
+	}
+	
+	if (endSearchPos != nullptr)
+	{
+		Dir2_t trailDirs[MAX_MAP_WIDTH][MAX_MAP_HEIGHT];
+		MyMemSet(&trailDirs[0][0], 0x00, sizeof(Dir2_t) * MAX_MAP_WIDTH * MAX_MAP_HEIGHT);
+		SearchPos_t* currentPos = endSearchPos;
+		Dir2_t prevDir = Dir2_None;
+		SearchPos_t* prevPos = nullptr;
+		while (currentPos != nullptr)
+		{
+			Dir2_t trailDir = currentPos->prevDir;
+			if (trailDir != Dir2_None) { trailDir = Dir2Opposite(trailDir); }
+			if (prevPos != nullptr) { trailDirs[currentPos->pos.x][currentPos->pos.y] = prevDir; }
+			if (currentPos->prevDir == Dir2_None) { break; }
+			prevPos = currentPos;
+			prevDir = trailDir;
+			currentPos = TryFindSearchPosArrayPos(&searched, currentPos->pos + ToVec2i(currentPos->prevDir));
+		}
+		
+		PrintLine_D("Map (%d x %d)", mapSize.width, mapSize.height);
+		for (u64 yIndex = 0; yIndex < mapSize.height; yIndex++)
+		{
+			for (u64 xIndex = 0; xIndex < mapSize.width; xIndex++)
+			{
+				char displayChar = GetDir2Char(trailDirs[xIndex][yIndex]);
+				if (displayChar == 'o') { displayChar = ' '; }
+				if ((i32)xIndex == startPos.x && (i32)yIndex == startPos.y)
+				{
+					displayChar = 'S';
+				}
+				else if ((i32)xIndex == endPos.x && (i32)yIndex == endPos.y)
+				{
+					displayChar = 'E';
+				}
+				Print_D("%c", displayChar);
+			}
+			WriteLine_D("");
+		}
+	}
+	
+	AocReturnU64(result);
 }
 
 // +==============================+
