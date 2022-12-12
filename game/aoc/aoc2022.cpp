@@ -1048,10 +1048,268 @@ MyStr_t AocSolutionFunc_2022_10(AocSolutionStruct_2022_10_t* data, bool doSoluti
 // +==============================+
 // |            Day 11            |
 // +==============================+
+#define MAX_NUM_MONKEYS 8
+#define MAX_NUM_ITEMS   200 
+#define OP_VALUE_OLD    0
+
+struct Item_t
+{
+	u64 id;
+	u64 worryLevel;
+};
+enum OpType_t
+{
+	OpType_Add = 0,
+	OpType_Subtract,
+	OpType_Multiply,
+	OpType_NumTypes,
+};
+const char* GetOpTypeStr(OpType_t enumValue)
+{
+	switch (enumValue)
+	{
+		case OpType_Add:      return "Add";
+		case OpType_Subtract: return "Subtract";
+		case OpType_Multiply: return "Multiply";
+		default: return "Unknown";
+	}
+}
+const char GetOpTypeChar(OpType_t enumValue)
+{
+	switch (enumValue)
+	{
+		case OpType_Add:      return '+';
+		case OpType_Subtract: return '-';
+		case OpType_Multiply: return '*';
+		default: return '?';
+	}
+}
+OpType_t GetOpTypeByChar(char c)
+{
+	for (u64 oIndex = 0; oIndex < OpType_NumTypes; oIndex++)
+	{
+		OpType_t opType = (OpType_t)oIndex;
+		if (c == GetOpTypeChar(opType)) { return opType; }
+	}
+	return OpType_NumTypes;
+}
+struct Monkey_t
+{
+	u64 id;
+	
+	u64 numInspections;
+	
+	OpType_t opType;
+	u64 opValue;
+	
+	u64 testDivisor;
+	u64 testTrueTarget;
+	u64 testFalseTarget;
+	
+	u64 numItems;
+	Item_t items[MAX_NUM_ITEMS];
+};
+void PrintMonkeyStates(u64 numMonkeys, Monkey_t* monkeys)
+{
+	for (u64 mIndex = 0; mIndex < numMonkeys; mIndex++)
+	{
+		Monkey_t* monkey = &monkeys[mIndex];
+		Print_D("Monkey %llu: [%llu] { ", monkey->id, monkey->numItems);
+		for (u64 iIndex = 0; iIndex < monkey->numItems; iIndex++)
+		{
+			Item_t* item = &monkey->items[iIndex];
+			Print_D("%s%llu(%c)", iIndex > 0 ? ", " : "", item->worryLevel, (char)('A' + item->id));
+		}
+		WriteLine_D(" }");
+	}
+}
+void SimulateMonkeys(bool doSolutionB, bool debugOutput, u64 allDivisorsMult, u64 numMonkeys, Monkey_t* monkeys)
+{
+	for (u64 mIndex = 0; mIndex < numMonkeys; mIndex++)
+	{
+		Monkey_t* monkey = &monkeys[mIndex];
+		if (debugOutput) { PrintLine_D("Simulating Monkey %llu", monkey->id); }
+		for (u64 iIndex = 0; monkey->numItems > 0; iIndex++)
+		{
+			Item_t* item = &monkey->items[iIndex];
+			if (debugOutput) { PrintLine_D("  Looking at item %c at %llu worry", (char)('A' + item->id), item->worryLevel); }
+			u64 opValue = monkey->opValue;
+			if (opValue == OP_VALUE_OLD) { opValue = item->worryLevel; }
+			switch (monkey->opType)
+			{
+				case OpType_Add:      item->worryLevel += opValue; if (debugOutput) { PrintLine_D("    Adding %llu", opValue);         } break;
+				case OpType_Subtract: item->worryLevel -= opValue; if (debugOutput) { PrintLine_D("    Subtracting %llu", opValue);    } break;
+				case OpType_Multiply: item->worryLevel *= opValue; if (debugOutput) { PrintLine_D("    Multiplying by %llu", opValue); } break;
+			}
+			item->worryLevel = (item->worryLevel % allDivisorsMult);
+			if (debugOutput) { PrintLine_D("    Worry is now %llu", item->worryLevel); }
+			if (!doSolutionB)
+			{
+				item->worryLevel = (u64)FloorR64i((r64)item->worryLevel / 3);
+				item->worryLevel = (item->worryLevel % allDivisorsMult);
+				if (debugOutput) { PrintLine_D("    Dropped to %llu", item->worryLevel); }
+			}
+			
+			Monkey_t* targetMonkey = nullptr;
+			if ((item->worryLevel % monkey->testDivisor) == 0)
+			{
+				Assert(monkey->testTrueTarget < numMonkeys);
+				Assert(monkey->testTrueTarget != monkey->id);
+				targetMonkey = &monkeys[monkey->testTrueTarget];
+				if (debugOutput) { PrintLine_D("    Throwing to monkey %llu because %llu IS divisable by %llu", monkey->testTrueTarget, item->worryLevel, monkey->testDivisor); }
+			}
+			else
+			{
+				Assert(monkey->testFalseTarget < numMonkeys);
+				Assert(monkey->testFalseTarget != monkey->id);
+				targetMonkey = &monkeys[monkey->testFalseTarget];
+				if (debugOutput) { PrintLine_D("    Throwing to monkey %llu because %llu IS NOT divisable by %llu", monkey->testFalseTarget, item->worryLevel, monkey->testDivisor); }
+			}
+			
+			Assert(targetMonkey->numItems < MAX_NUM_ITEMS);
+			Item_t* targetSlot = &targetMonkey->items[targetMonkey->numItems];
+			MyMemCopy(targetSlot, item, sizeof(Item_t));
+			targetMonkey->numItems++;
+			monkey->numItems--;
+			
+			monkey->numInspections++;
+		}
+	}
+}
 MyStr_t AocSolutionFunc_2022_11(AocSolutionStruct_2022_11_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_11 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, "input_2022_11.txt");
+	// AocOpenFile(file, "input_2022_11_ex.txt");
+	
+	u64 numMonkeys = 0;
+	Monkey_t monkeys[MAX_NUM_MONKEYS];
+	
+	Monkey_t* currentMonkey = nullptr;
+	u64 nextItemId = 1;
+	u64 allDivisorsMult = 1;
+	AocLoopFile(file, parser, line)
+	{
+		TrimWhitespace(&line);
+		if (IsEmptyStr(line)) { continue; }
+		
+		if (StrStartsWith(line, "Monkey"))
+		{
+			Assert(numMonkeys < MAX_NUM_MONKEYS);
+			currentMonkey = &monkeys[numMonkeys];
+			ClearPointer(currentMonkey);
+			currentMonkey->id = numMonkeys;
+			numMonkeys++;
+		}
+		else if (StrStartsWith(line, "Starting items: "))
+		{
+			NotNull(currentMonkey);
+			MyStr_t itemsStr = StrSubstring(&line, 16);
+			TempPushMark();
+			u64 numPieces = 0;
+			MyStr_t* pieces = SplitString(TempArena, itemsStr, ",", &numPieces);
+			for (u64 pIndex = 0; pIndex < numPieces; pIndex++)
+			{
+				Assert(currentMonkey->numItems < MAX_NUM_ITEMS);
+				Item_t* newItem = &currentMonkey->items[currentMonkey->numItems];
+				ClearPointer(newItem);
+				newItem->id = nextItemId;
+				nextItemId++;
+				bool parseSuccess = TryParseU64(pieces[pIndex], &newItem->worryLevel);
+				Assert(parseSuccess);
+				currentMonkey->numItems++;
+			}
+			TempPopMark();
+		}
+		else if (StrStartsWith(line, "Operation: new = old "))
+		{
+			NotNull(currentMonkey);
+			
+			char opTypeChar = line.chars[21];
+			currentMonkey->opType = GetOpTypeByChar(opTypeChar);
+			
+			MyStr_t opValueStr = StrSubstring(&line, 23);
+			if (StrEqualsIgnoreCase(opValueStr, "old"))
+			{
+				currentMonkey->opValue = OP_VALUE_OLD;
+			}
+			else
+			{
+				bool parseSuccess = TryParseU64(opValueStr, &currentMonkey->opValue);
+				Assert(parseSuccess);
+			}
+		}
+		else if (StrStartsWith(line, "Test: divisible by "))
+		{
+			NotNull(currentMonkey);
+			MyStr_t divisorStr = StrSubstring(&line, 19);
+			bool parseSuccess = TryParseU64(divisorStr, &currentMonkey->testDivisor);
+			Assert(parseSuccess);
+			allDivisorsMult *= currentMonkey->testDivisor;
+		}
+		else if (StrStartsWith(line, "If true: throw to monkey "))
+		{
+			NotNull(currentMonkey);
+			MyStr_t targetNumStr = StrSubstring(&line, 25);
+			bool parseSuccess = TryParseU64(targetNumStr, &currentMonkey->testTrueTarget);
+			Assert(parseSuccess);
+		}
+		else if (StrStartsWith(line, "If false: throw to monkey "))
+		{
+			NotNull(currentMonkey);
+			MyStr_t targetNumStr = StrSubstring(&line, 26);
+			bool parseSuccess = TryParseU64(targetNumStr, &currentMonkey->testFalseTarget);
+			Assert(parseSuccess);
+		}
+		else { PrintLine_E("Unhandled line \"%.*s\"", line.length, line.pntr); }
+	}
+	AocCloseFile(file);
+	
+	PrintLine_I("Found %llu monkeys", numMonkeys);
+	for (u64 mIndex = 0; mIndex < numMonkeys; mIndex++)
+	{
+		Monkey_t* monkey = &monkeys[mIndex];
+		PrintLine_D("Monkey[%llu] has %llu items and does %s %llu on inspection and checks %llu divisor and throws to %llu or %llu",
+			monkey->id,
+			monkey->numItems,
+			GetOpTypeStr(monkey->opType),
+			monkey->opValue,
+			monkey->testDivisor,
+			monkey->testTrueTarget,
+			monkey->testFalseTarget
+		);
+	}
+	
+	PrintMonkeyStates(numMonkeys, monkeys);
+	u64 numRounds = (doSolutionB ? 10000 : 20);
+	if (KeyDownRaw(Key_Shift)) { numRounds = 1; } //TODO: Remove me!
+	PrintLine_N("Simulating %llu rounds...", numRounds);
+	for (u64 rIndex = 0; rIndex < numRounds; rIndex++)
+	{
+		if (rIndex > 0 && ((rIndex+1) % 500) == 0) { PrintLine_D("Round %llu...", rIndex+1); }
+		SimulateMonkeys(doSolutionB, KeyDownRaw(Key_Control), allDivisorsMult, numMonkeys, monkeys);
+	}
+	PrintMonkeyStates(numMonkeys, monkeys);
+	
+	u64 maxInspections1 = 0;
+	u64 maxInspections2 = 0;
+	for (u64 mIndex = 0; mIndex < numMonkeys; mIndex++)
+	{
+		Monkey_t* monkey = &monkeys[mIndex];
+		PrintLine_D("Monkey[%llu] has inspected %llu items", monkey->id, monkey->numInspections);
+		if (monkey->numInspections > maxInspections1)
+		{
+			maxInspections2 = maxInspections1;
+			maxInspections1 = monkey->numInspections;
+		}
+		else if (monkey->numInspections > maxInspections2)
+		{
+			maxInspections2 = monkey->numInspections;
+		}
+	}
+	u64 monkeyBusiness = maxInspections1 * maxInspections2;
+	PrintLine_D("Max two are %llu and %llu making %llu monkey business", maxInspections1, maxInspections2, monkeyBusiness);
+	
+	AocReturnU64(monkeyBusiness);
 }
 
 // +==============================+
