@@ -1527,10 +1527,124 @@ MyStr_t AocSolutionFunc_2022_12(AocSolutionStruct_2022_12_t* data, bool doSoluti
 // +==============================+
 // |            Day 13            |
 // +==============================+
+struct PacketPiece_t
+{
+	bool isList;
+	u64 value;
+	VarArray_t items; //PacketPiece_t
+};
+void CreatePacketPiece(PacketPiece_t* piece, bool isList)
+{
+	ClearPointer(piece);
+	piece->isList = isList;
+	if (isList)
+	{
+		CreateVarArray(&piece->items, aocArena, sizeof(PacketPiece_t));
+	}
+}
+void ParseBracketedArea(MyStr_t packetStr, PacketPiece_t* pieceOut)
+{
+	bool isList = false;
+	if (StrStartsWith(packetStr, "[")) { isList = true; packetStr = StrSubstring(&packetStr, 1); }
+	if (StrEndsWith(packetStr,   "]")) { isList = true; packetStr = StrSubstring(&packetStr, 0, packetStr.length-1); }
+	TempPushMark();
+	u64 numPieces = 0;
+	MyStr_t* pieces = SplitStringWithBrackets(TempArena, packetStr, ',', '[', ']', &numPieces);
+	// PrintLine_D("There are %llu pieces in \"%.*s\"", numPieces, packetStr.length, packetStr.pntr);
+	Assert(numPieces > 0);
+	if (!isList)
+	{
+		CreatePacketPiece(pieceOut, false);
+		bool parseSuccess = TryParseU64(pieces[0], &pieceOut->value);
+		Assert(parseSuccess);
+		// PrintLine_D("This is an integer piece: %llu", pieceOut->value);
+	}
+	else
+	{
+		// PrintLine_D("This is an list of %llu items", numPieces);
+		CreatePacketPiece(pieceOut, true);
+		if (numPieces != 1 || !IsEmptyStr(pieces[0]))
+		{
+			for (u64 pIndex = 0; pIndex < numPieces; pIndex++)
+			{
+				// PrintLine_D("Parsing Piece %llu/%llu: \"%.*s\" (in \"%.*s\")", pIndex+1, numPieces, pieces[pIndex].length, pieces[pIndex].pntr, packetStr.length, packetStr.pntr);
+				PacketPiece_t* newItem = VarArrayAdd(&pieceOut->items, PacketPiece_t);
+				ParseBracketedArea(pieces[pIndex], newItem);
+			}
+		}
+	}
+	TempPopMark();
+}
+bool ComparePacketPieces(PacketPiece_t* left, PacketPiece_t* right)
+{
+	if (!left->isList && !right->isList)
+	{
+		if (left->value > right->value) { return false; }
+	}
+	else if (left->isList && right->isList)
+	{
+		for (u64 iIndex = 0; iIndex < left->items.length && iIndex < right->items.length; iIndex++)
+		{
+			PacketPiece_t* leftItem = VarArrayGet(&left->items, iIndex, PacketPiece_t);
+			PacketPiece_t* rightItem = VarArrayGet(&right->items, iIndex, PacketPiece_t);
+			if (!ComparePacketPieces(leftItem, rightItem)) { return false; }
+		}
+		if (left->items.length > right->items.length) { return false; }
+	}
+	else if (left->isList)
+	{
+		if (left->items.length == 0) { return true; }
+		if (left->items.length > 1) { return false; }
+		PacketPiece_t* leftItem = VarArrayGet(&left->items, 0, PacketPiece_t);
+		if (!ComparePacketPieces(leftItem, right)) { return false; }
+	}
+	else if (right->isList)
+	{
+		if (right->items.length == 0) { return false; }
+		if (right->items.length > 1) { return true; }
+		PacketPiece_t* rightItem = VarArrayGet(&right->items, 0, PacketPiece_t);
+		if (!ComparePacketPieces(left, rightItem)) { return false; }
+	}
+	return true;
+}
+bool IsPacketPieceInOrder(PacketPiece_t* piece)
+{
+	if (piece->isList)
+	{
+		for (u64 pIndex = 0; pIndex+1 < piece->items.length; pIndex++)
+		{
+			PacketPiece_t* leftItem = VarArrayGet(&piece->items, pIndex, PacketPiece_t);
+			PacketPiece_t* rightItem = VarArrayGet(&piece->items, pIndex+1, PacketPiece_t);
+			if (!ComparePacketPieces(leftItem, rightItem)) { return false; }
+		}
+		return true;
+	}
+	else { return true; }
+}
 MyStr_t AocSolutionFunc_2022_13(AocSolutionStruct_2022_13_t* data, bool doSolutionB)
 {
-	NotifyWrite_W("Solution_2022_13 is unimplemented"); //TODO: Implement me!
-	return MyStr_Empty;
+	AocOpenFile(file, (KeyDownRaw(Key_E) ? "input_2022_13_ex.txt" : "input_2022_13.txt"));
+	
+	u64 result = 0;
+	u64 index = 1;
+	AocLoopFile(file, parser, line)
+	{
+		TrimWhitespace(&line);
+		if (line.length == 0) { continue; }
+		
+		PrintLine_O("Checking packet \"%.*s\"", line.length, line.pntr);
+		PacketPiece_t packet = {};
+		ParseBracketedArea(line, &packet);
+		
+		bool isInOrder = IsPacketPieceInOrder(&packet);
+		PrintLineAt((isInOrder ? DbgLevel_Info : DbgLevel_Warning), "Packet %s in order", (isInOrder ? "\bis\b" : "\bis not\b"));
+		if (isInOrder) { result += index; }
+		
+		index++;
+	}
+	AocCloseFile(file);
+	
+	AocReturnU64(result);
 }
 
 // +==============================+

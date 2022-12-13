@@ -2367,6 +2367,8 @@
 			"MyStr_t TextboxGetSelectedText(Textbox_t* tb, bool giveWholeTextIfEmptySelection = false)",
 			"MyStr_t UnescapeQuotedStringInArena(MemArena_t* memArena, MyStr_t target, bool removeQuotes = true, bool allowNewLineEscapes = true, bool allowOtherEscapeCodes = false)",
 			"MyStr_t* SplitString(MemArena_t* memArena, MyStr_t target, MyStr_t delineator, u64* numPiecesOut = nullptr, bool ignoreCase = false)",
+			"MyStr_t* SplitStringBySpacesWithQuotesAndUnescape(MemArena_t* memArena, MyStr_t target, u64* numPiecesOut)",
+			"MyStr_t* SplitStringWithBrackets(MemArena_t* memArena, MyStr_t target, char separatorChar, char openBracketChar, char closeBracketChar, u64* numPiecesOut)",
 			"MyWideStr_t ConvertUtf8StrToUcs2(MemArena_t* memArena, MyStr_t utf8Str)",
 			"Particle_t* AllocParticle(ParticleEngine_t* engine, u8 flags, const SpriteSheet_t* sheet,\n\tv2i sheetFrame, r32 frameTime, u32 numFrames, u32 frameOffset,\n\tr32 depth, r32 lifeSpan,\n\tv2 position, v2 velocity, v2 acceleration, r32 velocityDamping,\n\tr32 rotation, r32 rotationVelocity, r32 rotationAcceleration, r32 rotVelocityDamping,\n\tr32 scaleStart, r32 scaleEnd,\n\tColor_t colorStart, Color_t colorEnd)",
 			"PartsParamColor_t NewPartsParamColor(PartsDistroFunc_t distroFunc, Color_t minColor, Color_t maxColor)",
